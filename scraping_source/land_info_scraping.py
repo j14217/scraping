@@ -24,6 +24,9 @@ lands_info2 = []
 # 各土地に割り振った番号
 land_num = 0
 
+csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
+csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
+
 # ブラウザの生成
 driver = webdriver.Firefox()
 
@@ -107,7 +110,7 @@ for pref in prefs:
                         th = tr.find_element_by_tag_name("th").text
                         td = tr.find_element_by_tag_name("td").text
                         land_info[th] = td
-                lands_info1.append(land_info)
+                lands_info2.append(land_info)
 
             # 建築条件がない場合
             else:
@@ -126,7 +129,7 @@ for pref in prefs:
                     th = th.text
                     td = td.text
                     land_info[th] = td 
-                lands_info2.append(land_info)
+                lands_info1.append(land_info)
             # タブを閉じる
             driver.close()
 
@@ -151,7 +154,7 @@ for pref in prefs:
     
     # TODO ファイルに書き込み 
     # そのままcsvにしたいが、キーが異なる2種類土地データがある
-    with open(".\\venvtest\\Sourse\\scraping\\land_info1.csv", "a", encoding="utf-8") as f:
+    with open(csvpath1, "a", encoding="utf-8") as f:
         keys = ""
         for k in lands_info1[0].keys():
             keys += k + ","
@@ -163,7 +166,7 @@ for pref in prefs:
                 values += (v.replace(",", "") + ",")
             f.write(values.replace("\n", " ").rstrip(",") + "\n")
     
-    with open(".\\venvtest\\Sourse\\scraping\\land_info2.csv", "a", encoding="utf-8") as f:
+    with open(csvpath2, "a", encoding="utf-8") as f:
         keys = ""
         for k in lands_info2[0].keys():
             keys += (k + ",")
