@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% if latest_landinfo_list %}
+    <ul>
+        {% for landinfo in latest_landinfo_list%}
+        <li>
+            <a href="{% url 'search:detail' landinfo.id %}">{{ landinfo.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
+</body>
+</html>

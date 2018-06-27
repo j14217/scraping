@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>{{ landinfo.title}}</h1>
+
+    <ul>
+        {% for landinfo in landinfo.landinfo_set.all %}
+            <li></li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url %}"></a>
+</body>
+</html>
