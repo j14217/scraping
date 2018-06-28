@@ -47,7 +47,7 @@ class LandInfo(models.Model):
     setback = models.CharField(max_length=50, null=True)  # セットバック
     conditions_etc = models.CharField(max_length=200, null=True)  # 条件等
     current_status = models.CharField(max_length=50, null=True)  # 現況
-    estab_completion_time = models.DateField(null=True)  # 造成完成時期
+    estab_completion_time = models.CharField(max_length=50, null=True)  # 造成完成時期
     delivery = models.CharField(max_length=50, null=True)  # 引渡し（時期/方法）
     scheduled_sales = models.CharField(max_length=200, null=True)  # 販売スケジュール
     property_no = models.IntegerField(null=True)  # 物件番号
