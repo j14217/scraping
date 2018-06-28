@@ -19,26 +19,27 @@ class DbConnect:
 
     def db_insert1(self, table, columns, info_tuple):
         sql = "INSERT INTO " + table + " (" + columns + ") VALUES("\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
             "%s, %s, %s, %s, %s"\
             ")"
         self.cursor.execute(sql, info_tuple)
 
     def db_insert2(self, table, columns, info_tuple):
         sql = "INSERT INTO " + table + "(" + columns + ") VALUES("\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s,"\
-            "%s, %s, %s, %s, %s"\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
+            "%s, %s, %s, %s, %s, "\
             "%s, %s"\
             ")"
+        print(sql)
         self.cursor.execute(sql, info_tuple)
 
     def db_rollback(self):
