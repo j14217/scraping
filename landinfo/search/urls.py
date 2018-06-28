@@ -11,6 +11,6 @@ urlpatterns = [
 
     path('<int:landinfo_id>/results/', views.results, name='results'),
 
-    path('<int:landinfo>/retrieval', views),
+#    path('<int:landinfo>/retrieval', views),
 ]
 
