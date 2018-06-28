@@ -162,8 +162,12 @@ for pref in prefs:
 
         for land in lands_info1:
             values = ""
-            for v in land.values():
-                values += (v.replace(",", "") + ",")
+            for k, v in land.items():
+                # 有無が不確定な情報を除外
+                if (k == "仲介手数料") or (k == "その他交通"):
+                    pass 
+                else:
+                    values += (v.replace(",", "") + ",")
             f.write(values.replace("\n", " ").rstrip(",") + "\n")
     
     with open(csvpath2, "a", encoding="utf-8") as f:
@@ -174,8 +178,12 @@ for pref in prefs:
 
         for land in lands_info2:
             values = ""
-            for v in land.values():
-                values += (v.replace(",", "") + ",")
+            for k, v in land.items():
+                # 有無が不確定な情報を除外
+                if k == "販売代理":
+                    pass 
+                else:
+                    values += (v.replace(",", "") + ",")
             f.write(values.replace("\n", " ").rstrip(",") + "\n")
 
 # スクレイピングの終了を伝える旨
