@@ -1,7 +1,12 @@
 import csv
+import traceback
 from time import sleep, time
+
+from dbconnection import DbConnect
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
+
+from filedatadb import data_insert_db
 
 #prefs = [
 #    "北海道", "青森", "岩手", "秋田", "宮城", "山形", "福島",
@@ -23,6 +28,9 @@ lands_info1 = []
 lands_info2 = []
 # 各土地に割り振った番号
 land_num = 0
+
+flag1 = 0
+flag2 = 0
 
 csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
 csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
@@ -149,37 +157,69 @@ for pref in prefs:
     end = time()
     
     # 1都道府県ごとに進捗を表示
-    print("scraping progress : " + pref + " end")
-    print("process time : " + str(int(end - start)) + " sec")
-    
+    print("Progress : " + pref)
+    print("-> Scraping is finish")
+
     # TODO ファイルに書き込み 
     # そのままcsvにしたいが、キーが異なる2種類土地データがある
     with open(csvpath1, "a", encoding="utf-8") as f:
-        keys = ""
-        for k in lands_info1[0].keys():
-            keys += k + ","
-        f.write(keys.rstrip(",") + "\n")
+        if flag1 == 0:
+            keys = ""
+            for k in lands_info1[0].keys():
+                keys += k + ","
+            f.write(keys.rstrip(",") + "\n")
+            flag1 = 1
 
         for land in lands_info1:
             values = ""
-            for v in land.values():
-                values += (v.replace(",", "") + ",")
+            for k, v in land.items():
+                # 有無が不確定な情報を除外
+                if (k == "仲介手数料") or (k == "その他交通"):
+                    pass 
+                else:
+                    values += (v.replace(",", "") + ",")
             f.write(values.replace("\n", " ").rstrip(",") + "\n")
-    
+        
     with open(csvpath2, "a", encoding="utf-8") as f:
-        keys = ""
-        for k in lands_info2[0].keys():
-            keys += (k + ",")
-        f.write(keys.rstrip(",") + "\n")
+        if flag2 == 0:
+            keys = ""
+            for k in lands_info2[0].keys():
+                keys += (k + ",")
+            f.write(keys.rstrip(",") + "\n")
+            flag2 == 1
 
         for land in lands_info2:
             values = ""
-            for v in land.values():
-                values += (v.replace(",", "") + ",")
+            for k, v in land.items():
+                # 有無が不確定な情報を除外
+                if k == "販売代理":
+                    pass 
+                else:
+                    values += (v.replace(",", "") + ",")
             f.write(values.replace("\n", " ").rstrip(",") + "\n")
 
-# スクレイピングの終了を伝える旨
-print("scraping end")
+    # 書き込みの終了を伝える旨
+    print("-> Writing data is finish")
+
+    try:
+        # DB操作のオブジェクトを生成　
+        connect = DbConnect()
+        data_insert_db(csvpath1, csvpath2, connect)
+    except:
+        # エラーが発生した場合、rollbackを行う
+        print("-> error")
+        print("---------------------------")
+        print(traceback.format_exc())
+        print("---------------------------")
+        connect.db_rollback()    
+    finally:
+        # 必ずcommitを行い、DBの接続を閉じる
+        connect.db_commit()
+        connect.db_close()
+
+    # 書き込みの終了を伝える旨
+    print("-> Insert data for db finish")
+    # print("process time : " + str(int(end - start)) + " sec")
 
 # ブラウザの破棄
 driver.quit()
