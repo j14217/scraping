@@ -5,12 +5,12 @@ from . import views
 app_name = 'search'
 urlpatterns = [
     # ex: /search/
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
 
-    path('<int:landinfo_id>/', views.detail, name='detail'),
+    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
 
-    path('<int:landinfo_id>/results/', views.results, name='results'),
+    path('<int:pk>/results/', views.ResultdView.as_view(), name='results'),
 
-    path('<int:landinfo>/retrieval', views),
+    path('<int:landinfo_id>/retrieval', views.retrieval, name='retrieval'),
 ]
 
