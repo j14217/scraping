@@ -2,7 +2,7 @@ import csv
 import re
 from datetime import datetime
 
-from LandInfo import LandInfo1, LandInfo2
+from scraping_source.LandInfo import LandInfo1, LandInfo2
 
 # csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
 # csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"

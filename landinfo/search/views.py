@@ -2,8 +2,8 @@ from django.http import Http404, HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from django.urls import reverse
-from search.models import LandInfo
-
+#from search.models import LandInfo
+from scraping_source.land_info_scraping import land_info_scraping
 from sqlalchemy import create_engine
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.sql import select
@@ -28,6 +28,7 @@ def detail(request, landinfo_id):
 
 
 def results(request, landinfo_id):
+    land_info_scraping()
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
