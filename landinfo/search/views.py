@@ -18,8 +18,17 @@ def index(request):
     return HttpResponse('ok')
 #    return HttpResponse(template.render(context, request))
 
+
+def detail(request, landinfo_id):
+    try:
+        landinfo = LandInfo.objects.get(pk=landinfo_id)
+    except LandInfo.DoesNotExist:
+        raise Http404("土地が見つかりません")
+    return render(request, 'search/detail.html', {'landinfo': landinfo})
+
+
 def results(request, landinfo_id):
-    #land_info_scraping()
+    land_info_scraping()
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
@@ -43,7 +52,7 @@ def results(request, landinfo_id):
         Column('estab_completion_time', String),
         Column('facility', String),
         Column('floor_area_ratio', String),
-        Column('floor_space', Integer),
+        Column('floor_space', String),
         Column('geography', String),
         Column('info_release_date', String),
         Column('info_update_date', String),
@@ -58,7 +67,7 @@ def results(request, landinfo_id):
         Column('optimal_use', String),
         Column('other_expenses', String),
         Column('parking', String),
-        Column('price', Integer),
+        Column('price', String),
         Column('private_road_burden', String),
         Column('property_no', String),
         Column('property_type', String),
