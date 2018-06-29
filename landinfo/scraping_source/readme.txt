@@ -17,3 +17,9 @@
  
  　○land_info1.csv,land_info2.csv：スクレイピングしたデータ
     ・この2つのファイルは上書きで開くので、再実行する場合は2ファイルを削除、あるいは中身のテキストを消してください
+
+ 　○dbconnection.py：dbへの接続等のクラス
+　
+ 　○filedatadb.py：dbへのデータの挿入など
+　
+ 　○LandInfo.py：各カラム名を参照するためのクラス
