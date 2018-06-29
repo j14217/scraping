@@ -10,7 +10,7 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_title'
 
     def get_queryset(self):
-        return LandInfo.objects.order_by('-price') [:5]
+        return LandInfo.objects.order_by('-price')[:5]
 
 class DetailView(generic.DetailView):
     model = LandInfo
