@@ -9,7 +9,10 @@ urlpatterns = [
 
     path('<int:landinfo_id>/', views.detail, name='detail'),
 
-    path('<int:landinfo_id>/results/', views.results, name='results'),
+    #path('<int:landinfo_id>/one/', views.one, name='one'),
+    path('<int:landinfo_id>/one/', views.one, name='one'),
+
+    path('all/', views.all, name='all'),
 
 #    path('<int:landinfo>/retrieval', views),
 ]
