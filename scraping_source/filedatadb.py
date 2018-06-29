@@ -1,23 +1,17 @@
 import csv
-import json
-import traceback
 import re
 from datetime import datetime
 
 from LandInfo import LandInfo1, LandInfo2
-from dbconnection import DbConnect
 
-csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
-csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
-csvpathtest = ".\\venvtest\\Sourse\\scraping\\test.csv"
+# csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
+# csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
 
-try:
+def data_insert_db(csvpath1, csvpath2, connect):
+    # try:
     # 各土地情報のオブジェクトを生成
     columns1 = LandInfo1()
     columns2 = LandInfo2()
-
-    # DB操作のオブジェクトを生成　
-    connect = DbConnect()
 
     # csvファイルから情報を取り出して、DBに挿入
 
@@ -32,7 +26,6 @@ try:
             info_list = []
             for k, v in row.items():
                 if k in columns1.column_list:
-                    print(str(k) + " : " + str(v))
                     if (v == '－') or (v == '-'):
                         info_list.append(None)
                     else:
@@ -40,7 +33,7 @@ try:
                         (k == columns1.land_area) or \
                         (k == columns1.floor_space):
                             num = re.match("[0-9]+(.[0-9]+)",
-                                           v.replace(",", ""))
+                                        v.replace(",", ""))
                             if num:
                                 info_list.append(float(num.group(0)))
                             else:
@@ -64,7 +57,6 @@ try:
                 info_list[4], info_list[14], info_list[8], info_list[9],
                 info_list[28], info_list[22], info_list[6]
             )
-            print(info_tuple)
             connect.db_insert1("search_landinfo", columns1.columns, info_tuple)
 
     # title,url,造成完成時期,引渡し時期,販売スケジュール,価格,最多価格帯,その他費用,
@@ -107,13 +99,13 @@ try:
             )
             connect.db_insert2("search_landinfo", columns2.columns, info_tuple)
 
-# エラーが発生した場合、rollbackを行う
-except:
-    print("error")
-    print(traceback.format_exc())
-    connect.db_rollback()
-    
-# 必ずcommitを行い、DBの接続を閉じる
-finally:
-    connect.db_commit()
-    connect.db_close()
+    # # エラーが発生した場合、rollbackを行う
+    # except:
+    #     print("error")
+    #     print(traceback.format_exc())
+    #     connect.db_rollback()
+        
+    # # 必ずcommitを行い、DBの接続を閉じる
+    # finally:
+    #     connect.db_commit()
+    #     connect.db_close()

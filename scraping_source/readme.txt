@@ -1,3 +1,5 @@
+○記録するcsvファイルのパスはソースファイルと同じ階層になるようにしてください
+
 ○land_info_scraping.py：土地情報のスクレイピング
 　・selenium
 　　要インストール -> pip install selenium
