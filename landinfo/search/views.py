@@ -1,32 +1,24 @@
-from django.http import Http404, HttpResponse,HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.template import loader
 from django.urls import reverse
-from search.models import LandInfo
+from django.views import generic
 
+from .models import LandInfo
 
-# Create your views here.
-def index(request):
-    latest_landinfo_list = LandInfo[:5]
-    template = loader.get_template('search/index.html')
-    context = {
-        'latest_landinfo_list': latest_landinfo_list,
-    }
-    return HttpResponse(template.render(context, request))
+class IndexView(generic.ListView):
+    template_name = 'search/index.html'
+    context_object_name = 'latest_title'
 
+    def get_queryset(self):
+        return LandInfo.objects.order_by('-price') [:5]
 
-def detail(request, landinfo_id):
-    try:
-        landinfo = LandInfo.objects.get(pk=landinfo_id)
-    except LandInfo.DoesNotExist:
-        raise Http404("土地が見つかりません")
-    return render(request, 'search/detail.html', {'landinfo': landinfo})
+class DetailView(generic.DetailView):
+    model = LandInfo
+    template_name= 'search/detail.html'
 
-
-def results(request, landinfo_id):
-    landinfo = get_object_or_404(LandInfo, pk=landinfo_id)
-    return render(request, 'search/results.html', {'landinfo': landinfo})
-
+class ResultView(generic.DetailView):
+    model = LandInfo
+    template_name = 'search/results.html'
 
 def retrieval(request, landinfo_id):
     landinfo = get_object_or_404(LandInfo, pk=landinfo_id)

@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
 
-    path('<int:pk>/results/', views.ResultdView.as_view(), name='results'),
+    path('<int:pk>/results/', views.ResultView.as_view(), name='results'),
 
     path('<int:landinfo_id>/retrieval', views.retrieval, name='retrieval'),
 ]
