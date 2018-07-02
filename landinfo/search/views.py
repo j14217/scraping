@@ -149,7 +149,8 @@ def all(request):
     )
     s = select([land_info])
     result = conn.execute(s) 
-    return HttpResponse(result)
+    data = result.fetchall()[5:10]
+    return render(request, 'search/all.html',{'app':'全て','columns':data})
 
 def retrieval(request, landinfo_id):
     landinfo = get_object_or_404(LandInfo, pk=landinfo_id)

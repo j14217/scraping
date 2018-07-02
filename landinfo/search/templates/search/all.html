@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>{{ app }}</title>
+</head>
+<body>
+<table border="1">
+{% for colum in columns %}
+<tr>
+{% for data in colum %}
+<td>{{data}}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
