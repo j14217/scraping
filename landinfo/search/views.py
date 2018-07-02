@@ -27,6 +27,7 @@ def detail(request, landinfo_id):
     return render(request, 'search/detail.html', {'landinfo': landinfo})
 
 
+
 def one(request, landinfo_id):
 #    land_info_scraping()
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
