@@ -8,6 +8,8 @@ from sqlalchemy import create_engine
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.sql import select
 
+from .forms import SearchForm
+
 # Create your views here.
 def index(request):
 #    latest_landinfo_list = LandInfo[:5]
@@ -164,3 +166,19 @@ def retrieval(request, landinfo_id):
         })
     else:
         return HttpResponseRedirect(reverse('search:results', args=(landinfo.id,)))
+
+def get_title(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/back/')  
+
+    # if a GET( or any other method) we'll create a blank form
+    else:
+        form = SearchForm()      
+        
+    return render(request, 'result.html', {'form': form})
