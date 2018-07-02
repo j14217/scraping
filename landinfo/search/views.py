@@ -28,7 +28,7 @@ def detail(request, landinfo_id):
 
 
 def results(request, landinfo_id):
-    land_info_scraping()
+    #land_info_scraping()
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
