@@ -8,7 +8,9 @@ from sqlalchemy import create_engine
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.sql import select
 
+
 #from .forms import SearchForm
+
 # Create your views here.
 def index(request):
 #    latest_landinfo_list = LandInfo[:5]
