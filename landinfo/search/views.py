@@ -8,7 +8,8 @@ from sqlalchemy import create_engine
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.sql import select
 
-from .forms import SearchForm
+
+#from .forms import SearchForm
 
 # Create your views here.
 def index(request):
@@ -27,7 +28,6 @@ def detail(request, landinfo_id):
     except LandInfo.DoesNotExist:
         raise Http404("土地が見つかりません")
     return render(request, 'search/detail.html', {'landinfo': landinfo})
-
 
 
 def one(request, landinfo_id):
@@ -150,9 +150,9 @@ def all(request):
         Column('tsubo_unit_price', String),
         Column('units_sold_total_units', String),
     )
-    s = select([land_info])
+    s = select([land_info.c.id,land_info.c.title])
     result = conn.execute(s) 
-    data = result.fetchall()[5:10]
+    data = result.fetchall()
     return render(request, 'search/all.html',{'app':'全て','columns':data})
 
 def retrieval(request, landinfo_id):
@@ -168,17 +168,16 @@ def retrieval(request, landinfo_id):
         return HttpResponseRedirect(reverse('search:results', args=(landinfo.id,)))
 
 def get_title(request):
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
         form = SearchForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/back/')  
+            return HttpResponseRedirect('/thanks/')
 
-    # if a GET( or any other method) we'll create a blank form
     else:
-        form = SearchForm()      
+        form = SearchForm()
+
+    return render(request, 'results.html', {'form': form})
         
-    return render(request, 'result.html', {'form': form})
