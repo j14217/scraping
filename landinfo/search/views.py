@@ -5,6 +5,7 @@ from django.urls import reverse
 from scraping_source.land_info_scraping import land_info_scraping
 from search.DBconnection import selectland
 #from .forms import SearchForm
+from .forms import SearchForm
 
 def one(request, landinfo_id):
     data = selectland('one',landinfo_id)
