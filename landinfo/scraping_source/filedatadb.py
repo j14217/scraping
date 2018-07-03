@@ -1,17 +1,24 @@
+"""
+DBへの挿入を行う
+"""
 import csv
 import re
+import traceback
 from datetime import datetime
 
-from scraping_source.LandInfo import LandInfo1, LandInfo2
+from test_sqlalchemy import DbConnect
+from LandInfo import LandColumns1, LandColumns2, LandInfo1, LandInfo2
 
-# csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
-# csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
+csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
+csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
 
-def data_insert_db(csvpath1, csvpath2, connect):
-    # try:
+try:
+    # DB操作のオブジェクトを生成　
+    connect = DbConnect()
+
     # 各土地情報のオブジェクトを生成
-    columns1 = LandInfo1()
-    columns2 = LandInfo2()
+    columns1 = LandColumns1()
+    columns2 = LandColumns2()
 
     # csvファイルから情報を取り出して、DBに挿入
 
@@ -30,23 +37,23 @@ def data_insert_db(csvpath1, csvpath2, connect):
                         info_list.append(None)
                     else:
                         if (k == columns1.price) or \
-                        (k == columns1.land_area) or \
-                        (k == columns1.floor_space):
+                            (k == columns1.land_area) or \
+                                (k == columns1.floor_space):
                             num = re.match("[0-9]+(.[0-9]+)",
-                                        v.replace(",", ""))
+                                           v.replace(",", ""))
                             if num:
                                 info_list.append(float(num.group(0)))
                             else:
                                 info_list.append(None)
                         elif (k == columns1.info_release_date) or \
-                        (k == columns1.next_info_update_date):
+                                (k == columns1.next_info_update_date):
                             info_list.append(
                                 datetime.strptime(v, "%Y年%m月%d日"))
                         elif k == columns1.property_no:
                             info_list.append(int(v))
                         else:
                             info_list.append(v)
-            info_tuple = (
+            land_info = LandInfo1(
                 info_list[0], info_list[3], info_list[2], info_list[23],
                 info_list[21], info_list[29], info_list[1], info_list[20],
                 info_list[25], info_list[30], info_list[31], info_list[12],
@@ -57,7 +64,7 @@ def data_insert_db(csvpath1, csvpath2, connect):
                 info_list[4], info_list[14], info_list[8], info_list[9],
                 info_list[28], info_list[22], info_list[6]
             )
-            connect.db_insert1("search_landinfo", columns1.columns, info_tuple)
+            connect.db_insert1(land_info)
 
     # title,url,造成完成時期,引渡し時期,販売スケジュール,価格,最多価格帯,その他費用,
     # 土地面積,坪数,販売区画数,総区画数,お問い合わせ先,物件種目,所在地,交通,建蔽率/容積率,
@@ -87,7 +94,7 @@ def data_insert_db(csvpath1, csvpath2, connect):
                                 datetime.strptime(v, "%Y年%m月%d日"))
                         else:
                             info_list.append(v)
-            info_tuple = (
+            land_info = LandInfo2(
                 info_list[0], info_list[14], info_list[15], info_list[16],
                 info_list[22], info_list[12], info_list[1], info_list[23],
                 info_list[18], info_list[3], info_list[25], info_list[2],
@@ -97,15 +104,18 @@ def data_insert_db(csvpath1, csvpath2, connect):
                 info_list[17], info_list[13], info_list[26], info_list[10],
                 info_list[4], info_list[27], info_list[11], info_list[31]
             )
-            connect.db_insert2("search_landinfo", columns2.columns, info_tuple)
+            connect.db_insert2(land_info)
+    connect.db_commit()
+except:
+    # エラーが発生した場合、rollbackを行う
+    print("-> error")
+    print("---------------------------")
+    print(traceback.format_exc())
+    print("---------------------------")
+    connect.db_rollback()
+finally:
+    # DBの接続を閉じる
+    connect.db_close()
 
-    # # エラーが発生した場合、rollbackを行う
-    # except:
-    #     print("error")
-    #     print(traceback.format_exc())
-    #     connect.db_rollback()
-        
-    # # 必ずcommitを行い、DBの接続を閉じる
-    # finally:
-    #     connect.db_commit()
-    #     connect.db_close()
+# DBへの挿入の完了を伝える旨
+print("-> Insert data for db finish")

@@ -1,4 +1,11 @@
-class LandInfo1:
+"""
+DBで扱う土地情報の項目と値を扱う
+"""
+
+
+# 土地情報の項目名を扱うクラス
+# LandColumns1, LandColumns2
+class LandColumns1:
     def __init__(self):
         self.title = "title"
         self.url = "url"
@@ -45,24 +52,14 @@ class LandInfo1:
             self.optimal_use, self.private_road_burden, self.land_rights,
             self.city_planning, self.usage_area, self.topography,
             self.building_coverage, self.floor_area_ratio, self.contact_info,
-            self.geography,self.land_law_notification, self.setback,
-            self.conditions_etc, self.current_status,self.delivery,
+            self.geography, self.land_law_notification, self.setback,
+            self.conditions_etc, self.current_status, self.delivery,
             self.property_no, self.info_release_date,
             self.next_info_update_date
         ]
 
-        self.columns = "title, location, traffic, building_coverage, "\
-            "usage_area, conditions_etc, url, city_planning, contact_info, "\
-            "current_status, delivery, facility, floor_area_ratio, "\
-            "floor_space, geography, info_release_date, land_area, "\
-            "land_law_notification, land_rights, lease_period_rent, "\
-            "maintenance_costs_etc, next_info_update_date, notices, "\
-            "optimal_use, other_expenses, price, private_road_burden, "\
-            "property_no, property_type, remarks, right_money, "\
-            "security_deposit, setback, topography, tsubo_unit_price"
 
-
-class LandInfo2:
+class LandColumns2:
     def __init__(self):
         self.title = "title"
         self.url = "url"
@@ -112,12 +109,95 @@ class LandInfo2:
             self.next_info_update_date
         ]
 
-        self.columns = "title, location, traffic, build_cov_area_ratio, "\
-            "usage_area, contact_infomation, url, city_planning, contact_info, "\
-            "delivery, development_permission_number, estab_completion_time, "\
-            "facility, floor_space, geography, info_provider, "\
-            "info_update_date, land_area, land_rights, "\
-            "most_popular_price_range, next_info_update_date, other_expenses, "\
-            "parking, price, private_road_burden, property_type, remarks, "\
-            "sales_divisions, scheduled_sales, seller, total_blocks, "\
-            "units_sold_total_units"
+
+# 土地情報の値を扱うクラス
+# LandInfo1, LandInfo2
+class LandInfo1:
+    def __init__(self, title, location, traffic, building_coverage,
+                 usage_area, conditions_etc, url, city_planning, contact_info,
+                 current_status, delivery, facility, floor_area_ratio,
+                 floor_space, geography, info_release_date, land_area,
+                 land_law_notification, land_rights, lease_period_rent,
+                 maintenance_costs_etc, next_info_update_date, notices,
+                 optimal_use, other_expenses, price, private_road_burden,
+                 property_no, property_type, remarks, right_money,
+                 security_deposit, setback, topography, tsubo_unit_price):
+        self.title = title
+        self.url = url
+        self.traffic = traffic
+        self.location = location
+        self.property_type = property_type
+        self.price = price
+        self.tsubo_unit_price = tsubo_unit_price
+        self.lease_period_rent = lease_period_rent
+        self.right_money = right_money
+        self.security_deposit = security_deposit
+        self.maintenance_costs_etc = maintenance_costs_etc
+        self.other_expenses = other_expenses
+        self.facility = facility
+        self.notices = notices
+        self.remarks = remarks
+        self.land_area = land_area
+        self.floor_space = floor_space
+        self.optimal_use = optimal_use
+        self.private_road_burden = private_road_burden
+        self.land_rights = land_rights
+        self.city_planning = city_planning
+        self.usage_area = usage_area
+        self.topography = topography
+        self.building_coverage = building_coverage
+        self.floor_area_ratio = floor_area_ratio
+        self.contact_info = contact_info
+        self.geography = geography
+        self.land_law_notification = land_law_notification
+        self.setback = setback
+        self.conditions_etc = conditions_etc
+        self.current_status = current_status
+        self.delivery = delivery
+        self.property_no = property_no
+        self.info_release_date = info_release_date
+        self.next_info_update_date = next_info_update_date
+
+
+class LandInfo2:
+    def __init__(self, title, location, traffic, build_cov_area_ratio,
+                 usage_area, contact_infomation, url, city_planning,
+                 contact_info, delivery, development_permission_number,
+                 estab_completion_time, facility, floor_space, geography,
+                 info_provider, info_update_date, land_area, land_rights,
+                 most_popular_price_range, next_info_update_date,
+                 other_expenses, parking, price, private_road_burden,
+                 property_type, remarks, sales_divisions, scheduled_sales,
+                 seller, total_blocks, units_sold_total_units):
+        self.title = title
+        self.url = url
+        self.traffic = traffic
+        self.location = location
+        self.property_type = property_type
+        self.price = price
+        self.most_popular_price_range = most_popular_price_range
+        self.other_expenses = other_expenses
+        self.facility = facility
+        self.remarks = remarks
+        self.land_area = land_area
+        self.floor_space = floor_space
+        self.sales_divisions = sales_divisions
+        self.total_blocks = total_blocks
+        self.units_sold_total_units = units_sold_total_units
+        self.private_road_burden = private_road_burden
+        self.land_rights = land_rights
+        self.city_planning = city_planning
+        self.usage_area = usage_area
+        self.build_cov_area_ratio = build_cov_area_ratio
+        self.contact_info = contact_info
+        self.geography = geography
+        self.development_permission_number = development_permission_number
+        self.estab_completion_time = estab_completion_time
+        self.delivery = delivery
+        self.scheduled_sales = scheduled_sales
+        self.contact_infomation = contact_infomation
+        self.parking = parking
+        self.seller = seller
+        self.info_provider = info_provider
+        self.info_update_date = info_update_date
+        self.next_info_update_date = next_info_update_date
