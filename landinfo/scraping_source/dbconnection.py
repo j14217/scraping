@@ -13,8 +13,8 @@ from sqlalchemy import Table, Column, String, Integer, Numeric, Date, MetaData
 class DbConnect:
     # DBの接続、トランザクション開始
     def __init__(self):
-        self.url = 'postgresql://postgres:scrapingland\
-            @192.168.0.109:5432/postgres'
+        self.url = 'postgresql://postgres:scrapingland'\
+            '@192.168.0.109:5432/postgres'
         self.db_engine = create_engine(self.url)
         self.connection = self.db_engine.connect()
         self.trans = self.connection.begin()

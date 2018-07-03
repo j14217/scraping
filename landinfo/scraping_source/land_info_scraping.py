@@ -8,6 +8,7 @@ from time import sleep
 from dbconnection import DbConnect
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.firefox.options import Options
 
 # prefs = [
 #    "北海道", "青森", "岩手", "秋田", "宮城", "山形", "福島",
@@ -34,8 +35,10 @@ flag2 = 0
 csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
 csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
 
-# ブラウザの生成
-driver = webdriver.Firefox()
+# headlessモードでブラウザの生成
+option = Options()
+option.set_headless()
+driver = webdriver.Firefox(options=option)
 
 # athomeサイトマップに遷移
 driver.get("https://www.athome.co.jp/sitemap/")
@@ -98,8 +101,8 @@ for pref in prefs:
                 "form#bukken_detail_form").get_attribute("action")
 
             # 建築条件がある場合
-            if condition == "https://www.athome.co.jp/\
-                    inquiry/bukken/check/request/":
+            if condition == "https://www.athome.co.jp/"\
+                    "inquiry/bukken/check/request/":
                 # 物件概要のタブをクリック
                 tabs = driver.find_element_by_css_selector(
                     "ul.clearfix.cm3_nav").find_elements_by_tag_name("li")
