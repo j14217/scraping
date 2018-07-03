@@ -2,11 +2,10 @@ from django.http import Http404, HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from django.urls import reverse
-from scraping_source.land_info_scraping import land_info_scraping
+
 from search.DBconnection import selectland
 #from .forms import SearchForm
 from .forms import SearchForm
-
 def one(request, landinfo_id):
     data = selectland('one',landinfo_id)
     return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data})
