@@ -8,12 +8,23 @@ from search.DBconnection import selectland
 from .forms import SearchForm
 
 def one(request, landinfo_id):
-    data = selectland('one',landinfo_id)
+    data = selectland('one',landinfo_id,0,0)
     return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data})
 
 def all(request):
-    data = selectland('all',0)
-    return render(request, 'search/all.html',{'app':'全て','columns':data})
+    data = selectland('all',0,0,0)
+    return render(request, 'search/all.html',{'columns':data})
+
+def searchforms(request):
+    if request.method == "POST":
+        form = SearchForm(data=request.POST)
+        if form.is_valid():
+            #このif文の中に処理を書く
+            data = selectland('search',0,0,request.POST['title'])
+            return render(request, 'search/search.html', {'form': form,'columns':data})
+    else:
+        form = SearchForm()
+    return render(request, 'search/search.html', {'form': form})
 
 def get_title(request):
     # if this is a POST request we need to process the form data

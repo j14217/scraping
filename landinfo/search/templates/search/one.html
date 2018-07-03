@@ -1,14 +1,8 @@
-<html>
-<head>
-<title>{{ app }}</title>
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'search/one.css' %}">
-</head>
-<body>
+{% extends "./base.html" %}
+{% block body %}
 <table class="onetable">
 {% for colum in columns %}
 <td >{{ colum }}</td>
 {% endfor %}
 </table>
-</body>
-</html>
+{% endblock %}

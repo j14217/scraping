@@ -1,5 +1,24 @@
-{% extends "base.html" %}
-
+{% extends "./base.html" %}
 {% block body %}
-    {{ message }}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="検索"/>
+    {% if columns != null %}
+<table  class="onetable">
+    <tr class="colum">
+    <td>id</td>
+    <td>タイトル</td>
+    <td>詳細</td>
+    </tr>
+    {% for colum in columns %}
+    <tr>
+    {% for data in colum %}
+    <td>{{data}}</td>
+    {% endfor %}
+    <td><a href="/search/{{ colum.id }}/one">詳細</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif%}
 {% endblock %}
