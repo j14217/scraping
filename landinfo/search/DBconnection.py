@@ -1,11 +1,15 @@
 from sqlalchemy import create_engine
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,and_, or_, not_
 from sqlalchemy.sql import select
+from sqlalchemy.orm import sessionmaker
+from .models import LandInfo
 
-def selectland(mode,landinfo_id):
+def selectland(mode,landinfo_id,searchid,keyword):
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
+    Session = sessionmaker(bind = engine)
+    session = Session()
     metadata = MetaData()
     land_info = Table('search_landinfo', metadata,
         Column('id', Integer, primary_key=True),
@@ -67,4 +71,8 @@ def selectland(mode,landinfo_id):
         result = conn.execute(s)
         data = result.fetchone()
         return data
+    if mode == 'search':
+        data = session.query(land_info.c.id,land_info.c.title).filter(land_info.c.title.like('%\\' + keyword + '%', escape='\\')).all()
+        return data
+        
 

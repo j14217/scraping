@@ -1,14 +1,17 @@
 .onetable {
-    border-collapse: collapse;
+    overflow:auto;
+    white-space: nowrap;
+    overflow-x:scroll;
     table-layout: fixed;
 }
 .onetable th,
 .onetable td {
+    height:100px;
+    width:100px;
     border: 1px solid #CCCCCC;
-    padding: 5px 10px;
-    text-align: left;
 }
-.onetable th {
-        background-color: #FFFFFF;
+
+.colum {
+    background-color: rgb(8, 240, 8);
+    border:1;
 }
-    

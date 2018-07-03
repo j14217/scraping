@@ -1,9 +1,11 @@
-<html>
-<head>
-<title>{{ app }}</title>
-</head>
-<body>
-<table border="1">
+{% extends "./base.html" %}
+{% block body %}
+<table  class="onetable">
+<tr class="colum">
+<td>id</td>
+<td>タイトル</td>
+<td>詳細</td>
+</tr>
 {% for colum in columns %}
 <tr>
 {% for data in colum %}
@@ -13,5 +15,4 @@
 </tr>
 {% endfor %}
 </table>
-</body>
-</html>
+{% endblock %}

@@ -7,5 +7,6 @@ urlpatterns = [
     path('<int:landinfo_id>/one/', views.one, name='one'),
 
     path('all/', views.all, name='all'),
+    path('searchforms/', views.searchforms, name='searchforms'),
 ]
 
