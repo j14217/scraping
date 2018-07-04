@@ -16,16 +16,14 @@ def all(request):
 
 def searchforms(request):
     if request.method == "POST":
-        formlocate = SearchFormLocate(data=request.POST)
         form = SearchForm(data=request.POST)
-        if form.is_valid() or formlocate.is_valid:
+        if form.is_valid() :
             #このif文の中に処理を書く
-            data = selectland('search',0,0,request.POST['location'])
             data = selectland('search',0,0,request.POST['title'])
             return render(request, 'search/search.html', {'form': form,'columns':data})
     else:
         form = SearchForm()
-    return render(request, 'search/search.html', {'form': form, 'formlocate': formlocate})
+    return render(request, 'search/search.html', {'form': form})
 
 
 def get_title(request):
