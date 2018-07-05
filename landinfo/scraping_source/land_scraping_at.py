@@ -32,15 +32,15 @@ lands_info2 = []
 flag1 = 0
 flag2 = 0
 
-csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
-csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
+csvpath1 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at1.csv"
+csvpath2 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at2.csv"
 
 # headlessモードでブラウザの生成
 option = Options()
 option.set_headless()
 driver = webdriver.Firefox(options=option)
 
-# athomeサイトマップに遷移
+# サイトマップに遷移
 driver.get("https://www.athome.co.jp/sitemap/")
 sleep(1)
 
@@ -59,25 +59,8 @@ for pref in prefs:
     driver.find_element_by_class_name("allList").click()
     sleep(1)
 
-    # 該当都道府県の土地情報件数
-    lands_num = driver.find_element_by_css_selector(
-        "dl.head-counter.pie").find_element_by_css_selector(
-        "span.num").text.replace(",", "")
-
-    # ページごとの土地件数
-    find_lands = Select(driver.find_element_by_css_selector(
-        "select.bukken-limit")).all_selected_options
-    find_lands = find_lands[0].get_attribute("value")
-
-    # ページ数
-    page = int(lands_num) // int(find_lands)
-
-    # 1ページのみの場合
-    if page == 0:
-        page = 2
-
     # 土地情報の取得
-    while range(page - 1):
+    while True:
         # 土地のリスト
         item_list = []
         item_list = driver.find_elements_by_css_selector(
@@ -99,6 +82,7 @@ for pref in prefs:
             # 建築条件の有無を判断
             condition = driver.find_element_by_css_selector(
                 "form#bukken_detail_form").get_attribute("action")
+            sleep(1)
 
             # 建築条件がある場合
             if condition == "https://www.athome.co.jp/"\
@@ -107,7 +91,6 @@ for pref in prefs:
                 tabs = driver.find_element_by_css_selector(
                     "ul.clearfix.cm3_nav").find_elements_by_tag_name("li")
                 tabs[3].find_element_by_tag_name("a").click()
-                sleep(1)
 
                 # 現在ページのurl取得
                 url = driver.current_url
@@ -133,7 +116,6 @@ for pref in prefs:
                 # 物件情報をテーブルから取得
                 land = driver.find_element_by_css_selector(
                     "section#item-detail_data")
-                tables = land.find_element_by_class_name("left")
                 ths = land.find_elements_by_tag_name("th")
                 tds = land.find_elements_by_tag_name("td")
                 land_info = {}
@@ -154,9 +136,9 @@ for pref in prefs:
         # 次のページがあるか判断
         try:
             # 次のページがあればそのページに遷移
-            next = driver.find_element_by_css_selector(
-                "ul.paging.typeInline.right").find_element_by_link_text(
-                    "次へ").click()
+            driver.find_element_by_xpath(
+                '//*[@id="item-list"]/div[1]/div[2]/ul'
+            ).find_element_by_link_text("次へ").click()
             sleep(1)
         except:
             # なければループを抜ける
