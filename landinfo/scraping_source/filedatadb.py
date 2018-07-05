@@ -6,11 +6,11 @@ import re
 import traceback
 from datetime import datetime
 
-from test_sqlalchemy import DbConnect
+from dbconnection import DbConnect
 from LandInfo import LandColumns1, LandColumns2, LandInfo1, LandInfo2
 
-csvpath1 = ".\\venvtest\\Sourse\\scraping\\land_info1.csv"
-csvpath2 = ".\\venvtest\\Sourse\\scraping\\land_info2.csv"
+csvpath1 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at1.csv"
+csvpath2 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at2.csv"
 
 try:
     # DB操作のオブジェクトを生成　
@@ -53,17 +53,7 @@ try:
                             info_list.append(int(v))
                         else:
                             info_list.append(v)
-            land_info = LandInfo1(
-                info_list[0], info_list[3], info_list[2], info_list[23],
-                info_list[21], info_list[29], info_list[1], info_list[20],
-                info_list[25], info_list[30], info_list[31], info_list[12],
-                info_list[24], info_list[16], info_list[26], info_list[33],
-                info_list[15], info_list[27], info_list[19], info_list[7],
-                info_list[10], info_list[34], info_list[13], info_list[17],
-                info_list[11], info_list[5], info_list[18], info_list[32],
-                info_list[4], info_list[14], info_list[8], info_list[9],
-                info_list[28], info_list[22], info_list[6]
-            )
+            land_info = LandInfo1(info_list)
             connect.db_insert1(land_info)
 
     # title,url,造成完成時期,引渡し時期,販売スケジュール,価格,最多価格帯,その他費用,
@@ -94,16 +84,7 @@ try:
                                 datetime.strptime(v, "%Y年%m月%d日"))
                         else:
                             info_list.append(v)
-            land_info = LandInfo2(
-                info_list[0], info_list[14], info_list[15], info_list[16],
-                info_list[22], info_list[12], info_list[1], info_list[23],
-                info_list[18], info_list[3], info_list[25], info_list[2],
-                info_list[20], info_list[9], info_list[24], info_list[28],
-                info_list[29], info_list[8], info_list[21], info_list[6],
-                info_list[30], info_list[7], info_list[19], info_list[5],
-                info_list[17], info_list[13], info_list[26], info_list[10],
-                info_list[4], info_list[27], info_list[11], info_list[31]
-            )
+            land_info = LandInfo2(info_list)
             connect.db_insert2(land_info)
     connect.db_commit()
 except:
