@@ -17,7 +17,7 @@
 </table>
 
 {% if contacts.has_previous %}
-<a href="?page={{ contacts.previous_page_number }}">previous</a>
+<a href="?page={{ contacts.previous_page_number }}">前へ</a>
 {% endif %}
 
     {% for num in contacts.paginator.page_range %} 
@@ -28,6 +28,6 @@
 {% endif %} {% endfor %}
 
 {% if contacts.has_next %}
-<a href="?page={{ contacts.next_page_number }}">next</a>
+<a href="?page={{ contacts.next_page_number }}">次へ</a>
 {% endif %}
 {% endblock %}
