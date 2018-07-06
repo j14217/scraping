@@ -2,11 +2,11 @@ from django.http import Http404, HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from django.urls import reverse
-
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from search.DBconnection import selectland
 #from .forms import SearchForm
 from .forms import SearchForm,SearchFormLocate
-
+from .models import LandInfo
 sland = selectland()
 
 def one(request, landinfo_id):
@@ -15,7 +15,15 @@ def one(request, landinfo_id):
 
 def all(request):
     data = sland.selectall()
-    return render(request, 'search/all.html',{'columns':data})
+    paginator = Paginator(data, 10)
+    contacts = paginator.page(1)
+    #contacts = paginator.get_page(page)
+
+    return render(request, 'search/all.html', {'columns': data, 'contacts': contacts})
+
+def onepage(request, landinfo_id):
+    data = sland.selectonepage(landinfo_id)
+    return HttpResponse(request, 'search/onepage.html', {'app': 'ひとつだけ', 'columns': data})
 
 def searchforms(request):
     if request.method == "POST":

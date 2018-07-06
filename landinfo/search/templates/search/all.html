@@ -15,4 +15,19 @@
 </tr>
 {% endfor %}
 </table>
+
+{% if columns.has_previous %}
+<a href="?page={{ columns.previous_page_number }}">previous</a>
+{% endif %}
+
+    {% for num in columns.paginator.page_range %} 
+    {% if columns.number == num %}
+{{ num }}
+{% else %}
+<a href="?page={{ num }}">{{ num }}</a>
+{% endif %} {% endfor %}
+
+{% if columns.has_next %}
+<a href="?page={{ columns.next_page_number }}">next</a>
+{% endif %}
 {% endblock %}
