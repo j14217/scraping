@@ -180,7 +180,7 @@ for pref in prefs:
             keys = ""
             for k in lands_info2[0].keys():
                 # 有無が不確定な情報を除外
-                if k == "販売代理":
+                if (k == "販売代理") or (k == " "):
                     pass
                 else:
                     keys += (k + ",")
@@ -191,7 +191,7 @@ for pref in prefs:
             values = ""
             for k, v in land.items():
                 # 有無が不確定な情報を除外
-                if k == "販売代理":
+                if (k == "販売代理") or (k == " "):
                     pass
                 else:
                     values += (v.replace(",", "") + ",")
