@@ -16,7 +16,10 @@ def one(request, landinfo_id):
 def all(request):
     data = sland.selectall()
     paginator = Paginator(data, 10)
-    contacts = paginator.page(1)
+    try:
+        contacts = paginator.page(paginator)
+    except (EmptyPage, PageNotAnInteger):
+        contacts = paginator.page(1)
     #contacts = paginator.get_page(page)
 
     return render(request, 'search/all.html', {'columns': data, 'contacts': contacts})
