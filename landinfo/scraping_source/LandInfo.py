@@ -80,6 +80,37 @@ class LandColumns_at2:
         self.units_sold_total_units = "販売戸数/総戸数"
 
 
+class LandColumns_su:
+    def __init__(self):
+        self.title = "title"
+        self.url = "url"
+        self.scheduled_sales = "販売スケジュール"
+        self.event_info = "イベント情報"
+        self.location = "所在地"
+        self.traffic = "交通"
+        self.sales_divisions = "販売区画数"
+        self.total_blocks = "総区画数"
+        self.price = "価格"
+        self.most_popular_price_range = "最多価格帯"
+        self.private_road_burden = "私道負担・道路"
+        self.other_expenses = "諸費用"
+        self.land_area = "土地面積"
+        self.build_cov_area_ratio = "建ぺい率・容積率"
+        self.current_status = "土地状況"
+        self.estab_completion_time = "造成完了時期"
+        self.land_rights = "土地の権利形態"
+        self.conditions_etc = "建築条件"
+        self.delivery = "引き渡し時期"
+        self.geography = "地目"
+        self.usage_area = "用途地域"
+        self.other_restrictions = "その他制限事項"
+        self.notices = "その他概要・特記事項"
+        self.company_profile = "会社概要"
+        self.contact_infomation = "問い合わせ先"
+        self.info_release_date = "情報提供日"
+        self.next_info_update_date = "次回更新日"
+
+
 # 土地情報の値を扱うクラス
 # LandInfo_at1, LandInfo_at2, LandInfo_su
 class LandInfo_at1:
@@ -155,3 +186,34 @@ class LandInfo_at2:
         self.info_update_date = info_list[29]
         self.next_info_update_date = info_list[30]
         self.units_sold_total_units = info_list[31]
+
+
+class LandInfo_su:
+    def __init__(self, info_list):
+        self.title = info_list[0]
+        self.url = info_list[1]
+        self.scheduled_sales = info_list[2]
+        self.event_info = info_list[3]
+        self.location = info_list[4]
+        self.traffic = info_list[5]
+        self.sales_divisions = info_list[6]
+        self.total_blocks = info_list[7]
+        self.price = info_list[8]
+        self.most_popular_price_range = info_list[9]
+        self.private_road_burden = info_list[10]
+        self.other_expenses = info_list[11]
+        self.land_area = info_list[12]
+        self.build_cov_area_ratio = info_list[13]
+        self.current_status = info_list[14]
+        self.estab_completion_time = info_list[15]
+        self.land_rights = info_list[16]
+        self.conditions_etc = info_list[17]
+        self.delivery = info_list[18]
+        self.geography = info_list[19]
+        self.usage_area = info_list[20]
+        self.other_restrictions = info_list[21]
+        self.notices = info_list[22]
+        self.company_profile = info_list[23]
+        self.contact_infomation = info_list[24]
+        self.info_release_date = info_list[25]
+        self.next_info_update_date = info_list[26]
