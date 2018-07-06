@@ -41,14 +41,9 @@ try:
                     if (k == columns1.price) or \
                         (k == columns1.land_area) or \
                             (k == columns1.floor_space):
-                        num = re.match("[0-9.億]+", v.replace(",", ""))
+                        num = re.match("[0-9.]+", v.replace(",", ""))
                         if num:
-                            num = num.group(0)
-                            if re.match("[0-9+]億$", num):
-                                info_list.append(
-                                    float(num.replace("億", "0000")))
-                            else:
-                                info_list.append(float(num.replace("億", "")))
+                            info_list.append(float(num.group(0)))
                         else:
                             info_list.append(0)
                     elif (k == columns1.info_release_date) or \
@@ -77,14 +72,9 @@ try:
                     if (k == columns2.price) or \
                         (k == columns2.land_area) or \
                             (k == columns2.floor_space):
-                        num = re.match("[0-9.億]+", v.replace(",", ""))
+                        num = re.match("[0-9.]+", v.replace(",", ""))
                         if num:
-                            num = num.group(0)
-                            if re.match("[0-9+]億$", num):
-                                info_list.append(
-                                    float(num.replace("億", "0000")))
-                            else:
-                                info_list.append(float(num.replace("億", "")))
+                            info_list.append(float(num.group(0)))
                         else:
                             info_list.append(0)
                     elif (k == columns2.info_update_date) or \
