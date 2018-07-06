@@ -80,6 +80,7 @@ class DbConnect:
 
     # DBへの挿入1
     def db_insert1(self, land_info):
+        # pylint: disable=E1120
         sql = self.land_table.insert().values(
             title=land_info.title, location=land_info.location,
             traffic=land_info.traffic,
@@ -113,6 +114,7 @@ class DbConnect:
 
     # DBへの挿入2
     def db_insert2(self, land_info):
+        # pylint: disable=E1120
         sql = self.land_table.insert().values(
             title=land_info.title, location=land_info.location,
             traffic=land_info.traffic,

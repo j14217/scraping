@@ -7,7 +7,8 @@ import traceback
 from datetime import datetime
 
 from dbconnection import DbConnect
-from LandInfo import LandColumns1, LandColumns2, LandInfo1, LandInfo2
+from LandInfo import LandColumns_at1, LandColumns_at2
+from LandInfo import LandInfo_at1, LandInfo_at2
 
 csvpath1 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at1.csv"
 csvpath2 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at2.csv"
@@ -17,8 +18,8 @@ try:
     connect = DbConnect()
 
     # 各土地情報のオブジェクトを生成
-    columns1 = LandColumns1()
-    columns2 = LandColumns2()
+    columns1 = LandColumns_at1()
+    columns2 = LandColumns_at2()
 
     # csvファイルから情報を取り出して、DBに挿入
 
@@ -32,28 +33,26 @@ try:
         for row in reader:
             info_list = []
             for k, v in row.items():
-                if k in columns1.column_list:
-                    if (v == '－') or (v == '-'):
-                        info_list.append(None)
-                    else:
-                        if (k == columns1.price) or \
-                            (k == columns1.land_area) or \
-                                (k == columns1.floor_space):
-                            num = re.match("[0-9]+(.[0-9]+)",
-                                           v.replace(",", ""))
-                            if num:
-                                info_list.append(float(num.group(0)))
-                            else:
-                                info_list.append(None)
-                        elif (k == columns1.info_release_date) or \
-                                (k == columns1.next_info_update_date):
-                            info_list.append(
-                                datetime.strptime(v, "%Y年%m月%d日"))
-                        elif k == columns1.property_no:
-                            info_list.append(int(v))
+                if (v == '－') or (v == '-'):
+                    info_list.append(None)
+                else:
+                    if (k == columns1.price) or \
+                        (k == columns1.land_area) or \
+                            (k == columns1.floor_space):
+                        num = re.match("[0-9]+(.[0-9]+)", v.replace(",", ""))
+                        if num:
+                            info_list.append(float(num.group(0)))
                         else:
-                            info_list.append(v)
-            land_info = LandInfo1(info_list)
+                            info_list.append(None)
+                    elif (k == columns1.info_release_date) or \
+                            (k == columns1.next_info_update_date):
+                        info_list.append(
+                            datetime.strptime(v, "%Y年%m月%d日"))
+                    elif k == columns1.property_no:
+                        info_list.append(int(v))
+                    else:
+                        info_list.append(v)
+            land_info = LandInfo_at1(info_list)
             connect.db_insert1(land_info)
 
     # title,url,造成完成時期,引渡し時期,販売スケジュール,価格,最多価格帯,その他費用,
@@ -65,26 +64,25 @@ try:
         for row in reader:
             info_list = []
             for k, v in row.items():
-                if k in columns2.column_list:
-                    if (v == '－') or (v == '-'):
-                        info_list.append(None)
-                    else:
-                        if (k == columns2.price) or \
-                            (k == columns2.land_area) or \
-                                (k == columns2.floor_space):
-                            num = re.match(
-                                "[0-9]+(.[0-9]+)", v.replace(",", ""))
-                            if num:
-                                info_list.append(float(num.group(0)))
-                            else:
-                                info_list.append(None)
-                        elif (k == columns2.info_update_date) or \
-                                (k == columns2.next_info_update_date):
-                            info_list.append(
-                                datetime.strptime(v, "%Y年%m月%d日"))
+                if (v == '－') or (v == '-'):
+                    info_list.append(None)
+                else:
+                    if (k == columns2.price) or \
+                        (k == columns2.land_area) or \
+                            (k == columns2.floor_space):
+                        num = re.match(
+                            "[0-9]+(.[0-9]+)", v.replace(",", ""))
+                        if num:
+                            info_list.append(float(num.group(0)))
                         else:
-                            info_list.append(v)
-            land_info = LandInfo2(info_list)
+                            info_list.append(None)
+                    elif (k == columns2.info_update_date) or \
+                            (k == columns2.next_info_update_date):
+                        info_list.append(
+                            datetime.strptime(v, "%Y年%m月%d日"))
+                    else:
+                        info_list.append(v)
+            land_info = LandInfo_at2(info_list)
             connect.db_insert2(land_info)
     connect.db_commit()
 except:

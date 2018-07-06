@@ -4,8 +4,8 @@ DBで扱う土地情報の項目と値を扱う
 
 
 # 土地情報の項目名を扱うクラス
-# LandColumns1, LandColumns2
-class LandColumns1:
+# LandColumns_at1, LandColumns_at2, LandColumns_su
+class LandColumns_at1:
     def __init__(self):
         self.title = "title"
         self.url = "url"
@@ -43,23 +43,8 @@ class LandColumns1:
         self.info_release_date = "情報公開日"
         self.next_info_update_date = "次回更新予定日"
 
-        self.column_list = [
-            self.title, self.url, self.traffic, self.location,
-            self.property_type, self.price, self.tsubo_unit_price,
-            self.lease_period_rent, self.right_money, self.security_deposit,
-            self.maintenance_costs_etc, self.other_expenses, self.facility,
-            self.notices, self.remarks, self.land_area, self.floor_space,
-            self.optimal_use, self.private_road_burden, self.land_rights,
-            self.city_planning, self.usage_area, self.topography,
-            self.building_coverage, self.floor_area_ratio, self.contact_info,
-            self.geography, self.land_law_notification, self.setback,
-            self.conditions_etc, self.current_status, self.delivery,
-            self.property_no, self.info_release_date,
-            self.next_info_update_date
-        ]
 
-
-class LandColumns2:
+class LandColumns_at2:
     def __init__(self):
         self.title = "title"
         self.url = "url"
@@ -94,24 +79,10 @@ class LandColumns2:
         self.next_info_update_date = "次回更新予定日"
         self.units_sold_total_units = "販売戸数/総戸数"
 
-        self.column_list = [
-            self.title, self.url, self.estab_completion_time, self.delivery,
-            self.scheduled_sales, self.price, self.most_popular_price_range,
-            self.other_expenses, self.land_area, self.floor_space,
-            self.sales_divisions, self.total_blocks, self.contact_infomation,
-            self.property_type, self.location, self.traffic,
-            self.build_cov_area_ratio, self.private_road_burden,
-            self.contact_info, self.parking, self.facility, self.land_rights,
-            self.usage_area, self.city_planning, self.geography,
-            self.development_permission_number, self.remarks, self.seller,
-            self.info_provider, self.info_update_date,
-            self.next_info_update_date, self.units_sold_total_units
-        ]
-
 
 # 土地情報の値を扱うクラス
-# LandInfo1, LandInfo2
-class LandInfo1:
+# LandInfo_at1, LandInfo_at2, LandInfo_su
+class LandInfo_at1:
     def __init__(self, info_list):
         self.title = info_list[0]
         self.url = info_list[1]
@@ -150,7 +121,7 @@ class LandInfo1:
         self.next_info_update_date = info_list[34]
 
 
-class LandInfo2:
+class LandInfo_at2:
     def __init__(self, info_list):
         self.title = info_list[0]
         self.url = info_list[1]
