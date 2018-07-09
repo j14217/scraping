@@ -150,6 +150,7 @@ class LandInfo_at1:
         self.property_no = info_list[32]
         self.info_release_date = info_list[33]
         self.next_info_update_date = info_list[34]
+        self.land_info = []
 
 
 class LandInfo_at2:
@@ -186,6 +187,7 @@ class LandInfo_at2:
         self.info_update_date = info_list[29]
         self.next_info_update_date = info_list[30]
         self.units_sold_total_units = info_list[31]
+        self.land_info = []
 
 
 class LandInfo_su:
@@ -217,3 +219,4 @@ class LandInfo_su:
         self.contact_infomation = info_list[24]
         self.info_release_date = info_list[25]
         self.next_info_update_date = info_list[26]
+        self.land_info = []
