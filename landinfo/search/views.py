@@ -8,10 +8,13 @@ from search.DBconnection import selectland
 from .forms import SearchForm
 from .models import LandInfo
 sland = selectland()
+names = landcolumns()
 
 def one(request, landinfo_id):
     data = sland.selectone(landinfo_id)
-    return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data})
+    name = names.landname
+    return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data,'name':name})
+    #return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data,})
 
 def all(request):
     data = sland.selectall()
