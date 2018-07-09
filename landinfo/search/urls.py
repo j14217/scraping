@@ -8,6 +8,6 @@ urlpatterns = [
 
     path('all/', views.all, name='all'),
     path('searchforms/', views.searchforms, name='searchforms'),
-    
+    path('<int:landinfo_id>/onepage', views.onepage, name='onepage'),
 ]
 

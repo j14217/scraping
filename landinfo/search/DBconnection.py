@@ -91,9 +91,16 @@ class selectland():
             jouken['title'] = self.land_info.c.title.like('%\\' + keywords['title'] + '%', escape='\\')
         if keywords['location'] !='':
             jouken['location']= self.land_info.c.location.like('%\\' + keywords['location'] + '%', escape='\\')
+        if keywords['traffic'] !='':
+            jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
         for filter_land in jouken.values(): 
             data = data.filter(filter_land)
         data = data.all()
         return data
-        
+
+    def selectonepage(self, landinfo_id):
+        s = select([self.land_info], self.land_info.c.id == landinfo_id)[landinfo_id-1:landinfo_id+5]
+        result = self.conn.execute(s)
+        data = result.fetchone()
+        return data
 
