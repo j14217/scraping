@@ -1,18 +1,27 @@
 {% extends "./base.html" %}
 {% block body %}
-<table  class="onetable">
-<tr class="colum">
-<td>id</td>
-<td>タイトル</td>
-<td>詳細</td>
-</tr>
-{% for colum in columns %}
-<tr>
-{% for data in colum %}
-<td>{{data}}</td>
-{% endfor %}
-<td><a href="/search/{{ colum.id }}/one">詳細</a></td>
-</tr>
-{% endfor %}
+<table  class="alltable">
+    <tr>
+    <td rowspan="3" class="columid">id</td><td colspan="4">タイトル</td>
+    </tr>
+    <tr>
+    <td  class="title_long">交通</td><td>価格(万円)</td><td>土地面積</td><td >容積量</td>
+    </tr>
+    <tr>
+    <td  class="title_long">所在地</td><td>坪単価</td><td>私道負担</td><td>建蔽率</td>
+    </tr>
 </table>
+{% for colum in columns %}
+<table class="alltable">
+    <tr>
+    <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="4"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td>
+    </tr>
+    <tr>
+    <td title="{{ colum.traffic }}" class="long">{{ colum.traffic }}</td><td>{{ colum.price }}万円</td><td>{{colum.land_area}}㎡</td><td>{{ colum.floor_area_ratio }}</td>
+    </tr>
+    <tr>
+    <td title="{{ colum.location }}" class="long"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td>{{ colum.tsubo_unit_price }}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td>
+    </tr>
+</table>
+{% endfor %}
 {% endblock %}

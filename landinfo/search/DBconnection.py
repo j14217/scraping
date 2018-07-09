@@ -4,57 +4,6 @@ from sqlalchemy.sql import select
 from sqlalchemy.orm import sessionmaker
 from .models import LandInfo
 
-class landinfo:
-    __tablename__ = 'search_landinfo'
-    id = Column('id', Integer, primary_key=True)
-    title =Column('title', String)
-    location = Column('location', String)
-    traffic= Column('traffic', String)
-    build_cov_area_ratio= Column('build_cov_area_ratio', String)
-    building_coverage= Column('building_coverage', String)
-    usage_area= Column('usage_area', String)
-    conditions_etc= Column('conditions_etc', String)
-    contact_infomation= Column('contact_infomation', String)
-    url= Column('url', String)
-    city_planning= Column('city_planning', String)
-    contact_info= Column('contact_info', String)
-    current_status= Column('current_status', String)
-    delivery= Column('delivery', String)
-    development_permission_number= Column('development_permission_number', String)
-    estab_completion_time= Column('estab_completion_time', String)
-    facility= Column('facility', String)
-    floor_area_ratio= Column('floor_area_ratio', String)
-    floor_space= Column('floor_space', String)
-    geography= Column('geography', String)
-    info_release_date= Column('info_release_date', String)
-    info_update_date= Column('info_update_date', String)
-    land_area= Column('land_area', Integer)
-    land_law_notification= Column('land_law_notification', String)
-    land_rights= Column('land_rights', String)
-    lease_period_rent= Column('lease_period_rent', String)
-    maintenance_costs_etc= Column('maintenance_costs_etc', String)
-    most_popular_price_range= Column('most_popular_price_range', String)
-    next_info_update_date= Column('next_info_update_date', String)
-    notices= Column('notices', String)
-    optimal_use= Column('optimal_use', String)
-    other_expenses= Column('other_expenses', String)
-    parking= Column('parking', String)
-    price= Column('price', String)
-    private_road_burden= Column('private_road_burden', String)
-    property_no= Column('property_no', String)
-    property_type= Column('property_type', String)
-    remarks= Column('remarks', String)
-    right_money= Column('right_money', String)
-    sales_divisions= Column('sales_divisions', String)
-    scheduled_sales= Column('scheduled_sales', String)
-    security_deposit= Column('security_deposit', String)
-    seller= Column('seller', String)
-    setback= Column('setback', String)
-    topography= Column('topography', String)
-    total_blocks= Column('total_blocks', String)
-    tsubo_unit_price= Column('tsubo_unit_price', String)
-    units_sold_total_units= Column('units_sold_total_units', String)
-
 class selectland():
     url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
     engine = create_engine(url)
@@ -112,11 +61,24 @@ class selectland():
         Column('tsubo_unit_price', String),
         Column('units_sold_total_units', String),
     )
+
+    #引数のdataにはレコードが存在するよう加工する必要あり(selectall参照)
+    def None_delete(self,data):
+        dictdata = dict(data)
+        for colum in dictdata:
+            if dictdata[colum] == None:
+                dictdata[colum] = 'なし'
+        return dictdata
+
     def selectall(self):
-        s = select([self.land_info.c.id,self.land_info.c.title])
+        ds =[]
+        s = select([self.land_info])
         result = self.conn.execute(s)
         data = result.fetchall()
-        return data
+        for colum in data:
+            dictd = self.None_delete(colum) 
+            ds.append(dictd)
+        return ds
     def selectone(self,landinfo_id):
         s = select([self.land_info], self.land_info.c.id == landinfo_id)
         result = self.conn.execute(s)
