@@ -3,7 +3,7 @@
 <form action="" method="POST">
     {% csrf_token %}
     {{ form }}
-    {{ formlocate }}
+
     <input type="submit" value="検索"/>
     {% if columns != null %}
 <table  class="onetable">
