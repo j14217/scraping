@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator,InvalidPage
 from search.DBconnection import selectland
 #from .forms import SearchForm
-from .forms import SearchForm,SearchFormLocate
+from .forms import SearchForm
 from .models import LandInfo
 sland = selectland()
 
@@ -24,7 +24,7 @@ def all(request):
         page_no = 1
         
     try:
-        contacts = paginator.page(page_no)
+        contacts = paginator.page(1)
     except (EmptyPage, PageNotAnInteger):
         contacts = paginator.page(1)
 
@@ -36,9 +36,8 @@ def onepage(request, landinfo_id):
 
 def searchforms(request):
     if request.method == "POST":
-        formlocate = SearchFormLocate(data=request.POST)
         form = SearchForm(data=request.POST)
-        if form.is_valid() or formlocate.is_valid:
+        if form.is_valid() :
             #このif文の中に処理を書く
             data = sland.selectsearch(request.POST)
             return render(request, 'search/search.html', {'form': form,'columns':data})

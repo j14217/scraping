@@ -129,6 +129,8 @@ class selectland():
             jouken['title'] = self.land_info.c.title.like('%\\' + keywords['title'] + '%', escape='\\')
         if keywords['location'] !='':
             jouken['location']= self.land_info.c.location.like('%\\' + keywords['location'] + '%', escape='\\')
+        if keywords['traffic'] !='':
+            jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
         for filter_land in jouken.values(): 
             data = data.filter(filter_land)
         data = data.all()
