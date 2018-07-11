@@ -1,8 +1,19 @@
 {% extends "./base.html" %}
 {% block body %}
 <table class="onetable">
-{% for colum in columns %}
-<td >{{ colum }}</td>
-{% endfor %}
+    <thead>
+        <tr>
+            {% for dt in name %}
+                <th>{{ dt }}</th>
+            {% endfor %}
+        </tr>    
+    </thead>
+    <tbody>
+        <tr>
+            {% for colum in colmuns %}
+                <td>{{ colum }}</td>
+            {% endfor %}
+        </tr>
+    </tbody>   
 </table>
 {% endblock %}

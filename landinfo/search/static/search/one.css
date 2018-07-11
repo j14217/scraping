@@ -9,13 +9,15 @@
 
 .alltable th,
 .alltable td {
+  
   height:60px;
   width:100px;
-  max-width:600px;
+  max-width:500px;
   border: 1px solid #CCCCCC;
   white-space: auto;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align:center;
 }
 
 .alltable td.columid {
