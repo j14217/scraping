@@ -13,8 +13,8 @@ from sqlalchemy import Table, Column, String, Integer, Numeric, Date, MetaData
 class DbConnect:
     # DBの接続、トランザクション開始
     def __init__(self):
-        self.url = 'postgresql+psycopg2://postgres:scrapingland'\
-            '@192.168.0.109:5432/postgres'
+        self.url = 'postgresql+psycopg2://postgres:postgres'\
+            '@192.168.0.159:5432/postgres'
         self.db_engine = create_engine(self.url)
         self.connection = self.db_engine.connect()
         self.trans = self.connection.begin()
@@ -50,7 +50,7 @@ class DbConnect:
                                 Column('lease_period_rent', String(50)),
                                 Column('maintenance_costs_etc', String(50)),
                                 Column('most_popular_price_range', String(50)),
-                                Column('next_info_update_date', Date),
+                                Column('next_info_update_date', String(200)),
                                 Column('notices', String(200)),
                                 Column('optimal_use', String(50)),
                                 Column('other_expenses', String(50)),
@@ -70,6 +70,9 @@ class DbConnect:
                                 Column('total_blocks', String(50)),
                                 Column('tsubo_unit_price', String(50)),
                                 Column('units_sold_total_units', String(50)),
+                                Column('company_profile', String(200)),
+                                Column('event_info', String(200)),
+                                Column('other_restrictions', String(200)),
                                 )
 
     # 全件表示
@@ -166,7 +169,7 @@ class DbConnect:
             title=land_info.title,
             url=land_info.url,
             scheduled_sales=land_info.scheduled_sales,
-            # event_info=land_info.event_info,
+            event_info=land_info.event_info,
             location=land_info.location,
             traffic=land_info.traffic,
             sales_divisions=land_info.sales_divisions,
@@ -184,12 +187,12 @@ class DbConnect:
             delivery=land_info.delivery,
             geography=land_info.geography,
             usage_area=land_info.usage_area,
-            # other_restrictions=land_info.other_restrictions,
+            other_restrictions=land_info.other_restrictions,
             notices=land_info.notices,
-            # company_profile=land_info.company_profile,
+            company_profile=land_info.company_profile,
             contact_infomation=land_info.contact_infomation,
             info_release_date=land_info.info_release_date,
-            # next_info_update_date=land_info.next_info_update_date
+            next_info_update_date=land_info.next_info_update_date,
             floor_space=0
         )
         self.connection.execute(sql)

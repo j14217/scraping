@@ -75,3 +75,4 @@ def search_result(request):
         })
     else:
         return redirect('search:searchforms')
+

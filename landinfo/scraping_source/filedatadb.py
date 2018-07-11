@@ -15,7 +15,7 @@ csvpath2 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at2.csv"
 csvpath3 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_su.csv"
 
 try:
-    # DB操作のオブジェクトを生成　
+    # DB操作のオブジェクトを生成
     connect = DbConnect()
 
     # 各土地情報のオブジェクトを生成
@@ -35,8 +35,8 @@ try:
         for row in reader:
             info_list = []
             for k, v in row.items():
-                if (v == '－') or (v == '-'):
-                    info_list.append(None)
+                if (v == '-'):
+                    info_list.append("－")
                 else:
                     if (k == columns1.price) or \
                         (k == columns1.land_area) or \
@@ -46,10 +46,8 @@ try:
                             info_list.append(float(num.group(0)))
                         else:
                             info_list.append(0)
-                    elif (k == columns1.info_release_date) or \
-                            (k == columns1.next_info_update_date):
-                        info_list.append(
-                            datetime.strptime(v, "%Y年%m月%d日"))
+                    elif (k == columns1.info_release_date):
+                        info_list.append(datetime.strptime(v, "%Y年%m月%d日"))
                     elif k == columns1.property_no:
                         info_list.append(int(v))
                     else:
@@ -66,8 +64,8 @@ try:
         for row in reader:
             info_list = []
             for k, v in row.items():
-                if (v == '－') or (v == '-'):
-                    info_list.append(None)
+                if (v == '-') or ("- / -" in v):
+                    info_list.append(v.replace("-", "－"))
                 else:
                     if (k == columns2.price) or \
                         (k == columns2.land_area) or \
@@ -77,8 +75,7 @@ try:
                             info_list.append(float(num.group(0)))
                         else:
                             info_list.append(0)
-                    elif (k == columns2.info_update_date) or \
-                            (k == columns2.next_info_update_date):
+                    elif (k == columns2.info_update_date):
                         info_list.append(
                             datetime.strptime(v, "%Y年%m月%d日"))
                     else:
@@ -91,8 +88,8 @@ try:
         for row in reader:
             info_list = []
             for k, v in row.items():
-                if (v == '－') or (v == '-'):
-                    info_list.append(None)
+                if (v == '-'):
+                    info_list.append("－")
                 else:
                     if (k == columns3.price) or (k == columns3.land_area):
                         num = re.match("[0-9.億]+", v.replace(",", ""))
@@ -106,8 +103,7 @@ try:
                         else:
                             info_list.append(0)
                     elif (k == columns3.info_release_date):
-                        info_list.append(
-                            datetime.strptime(v, "%Y年%m月%d日"))
+                        info_list.append(datetime.strptime(v, "%Y年%m月%d日"))
                     else:
                         info_list.append(v)
             land_info = LandInfo_su(info_list)

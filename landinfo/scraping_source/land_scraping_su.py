@@ -1,5 +1,5 @@
 """
-Webクローリングとスクレイピングを行う
+Webスクレイピングを行う
 """
 
 import csv
@@ -11,6 +11,8 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options
 
 # preflist
+# 最終的に収集する都道府県は引数としてリストで渡す
+
 # prefs = [
 #    "北海道", "青森県", "岩手県", "秋田県", "宮城県", "山形県", "福島県",
 #    "東京都", "神奈川県", "千葉県", "群馬県", "栃木県", "茨城県",

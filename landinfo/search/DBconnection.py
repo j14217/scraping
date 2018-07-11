@@ -132,4 +132,10 @@ class selectland():
         data = data.all()
         return data
 
+    def selectonepage(self, landinfo_id):
+        s = select([self.land_info], self.land_info.c.id == landinfo_id)[landinfo_id-1:landinfo_id+5]
+        result = self.conn.execute(s)
+        data = result.fetchone()
+        return data
+
 
