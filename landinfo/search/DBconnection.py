@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from .models import LandInfo
 
 class selectland():
-    url = 'postgresql://postgres:scrapingland@192.168.0.109:5432/postgres'
+    url = 'postgresql://postgres:postgres@192.168.0.159:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
     Session = sessionmaker(bind = engine)
@@ -34,7 +34,7 @@ class selectland():
         Column('geography', String),
         Column('info_release_date', String),
         Column('info_update_date', String),
-        Column('land_area', Integer),
+        Column('land_area', String),
         Column('land_law_notification', String),
         Column('land_rights', String),
         Column('lease_period_rent', String),
@@ -45,7 +45,7 @@ class selectland():
         Column('optimal_use', String),
         Column('other_expenses', String),
         Column('parking', String),
-        Column('price', String),
+        Column('price', Integer),
         Column('private_road_burden', String),
         Column('property_no', String),
         Column('property_type', String),
@@ -67,7 +67,7 @@ class selectland():
         dictdata = dict(data)
         for colum in dictdata:
             if dictdata[colum] == None:
-                dictdata[colum] = 'なし'
+                dictdata[colum] = '-'
         return dictdata
 
     def selectall(self):
@@ -86,15 +86,49 @@ class selectland():
         return data
     def selectsearch(self,keywords):
         jouken ={}
-        data = self.session.query(self.land_info.c.id,self.land_info.c.title)
+        data = self.session.query(self.land_info)
+
+        #価格上限
+        if keywords['max_price'] !='':
+            data = data.filter(self.land_info.c.price <= keywords['max_price'])
+        #価格下限
+        if keywords['min_price'] !='':
+            data = data.filter(self.land_info.c.price >= keywords['min_price'])
+        
+        #面積上限
+        if keywords['max_area'] !='':
+            data = data.filter(self.land_info.c.land_area <= keywords['max_area'])
+        #面積下限
+        if keywords['min_area'] !='':
+            data = data.filter(self.land_info.c.land_area >= keywords['min_area'])
+
+        #タイトル検索
         if keywords['title'] != '':
             jouken['title'] = self.land_info.c.title.like('%\\' + keywords['title'] + '%', escape='\\')
+        #所在地検索
         if keywords['location'] !='':
             jouken['location']= self.land_info.c.location.like('%\\' + keywords['location'] + '%', escape='\\')
+        #交通検索
         if keywords['traffic'] !='':
             jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
         for filter_land in jouken.values(): 
             data = data.filter(filter_land)
+
+        #価格の順番
+        if keywords['order'] == '1':
+            data = data.order_by(self.land_info.c.price)
+        elif keywords['order'] == '2':
+            data = data.order_by(self.land_info.c.price.desc())
+        elif keywords['order'] == '3':
+            data = data.order_by(self.land_info.c.tsubo_unit_price.desc())
+        elif keywords['order'] == '4':
+            data = data.order_by(self.land_info.c.tsubo_unit_price)
+        elif keywords['order'] == '5':
+            data = data.order_by(self.land_info.c.land_area.desc())
+        elif keywords['order'] == '6':
+            data = data.order_by(self.land_info.c.land_area)
+        
+
         data = data.all()
         return data
 
@@ -103,4 +137,5 @@ class selectland():
         result = self.conn.execute(s)
         data = result.fetchone()
         return data
+
 

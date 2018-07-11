@@ -23,19 +23,26 @@
     <td title="{{ colum.location }}" class="long"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td>{{ colum.tsubo_unit_price }}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td>
     </tr>
 </table>
+{% endfor %}
+
 
 {% if contacts.has_previous %}
 <a href="?page={{ contacts.previous_page_number }}">前へ</a>
 {% endif %}
 
-    {% for num in contacts.paginator.page_range %} 
-    {% if contacts.number == num %}
+
+
+{% for num in contacts.paginator.page_range %} 
+{% ifequal num entry.number %}
 {{ num }}
 {% else %}
 <a href="?page={{ num }}">{{ num }}</a>
-{% endif %} {% endfor %}
+{% endifequal %}
+{% endfor %}
+
 
 {% if contacts.has_next %}
 <a href="?page={{ contacts.next_page_number }}">次へ</a>
 {% endif %}
+
 {% endblock %}

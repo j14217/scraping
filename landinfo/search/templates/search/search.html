@@ -2,24 +2,45 @@
 {% block body %}
 <form action="" method="POST">
     {% csrf_token %}
-    {{ form }}
+
+    <table>
+    {{form.as_table}}
+    </table>
+    <input type="hidden" name="scroll_top" value="" class="st">
 
     <input type="submit" value="検索"/>
+</form>
     {% if columns != null %}
-<table  class="onetable">
-    <tr class="colum">
-    <td>id</td>
-    <td>タイトル</td>
-    <td>詳細</td>
-    </tr>
     {% for colum in columns %}
-    <tr>
-    {% for data in colum %}
-    <td>{{data}}</td>
+    <table class="alltable">
+        <tr>
+        <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="4"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td>
+        </tr>
+        <tr>
+        <td title="{{ colum.traffic }}" class="long">{{ colum.traffic }}</td><td>{{ colum.price }}万円</td><td>{{colum.land_area}}㎡</td><td>{{ colum.floor_area_ratio }}</td>
+        </tr>
+        <tr>
+        <td title="{{ colum.location }}" class="long"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td>{{ colum.tsubo_unit_price }}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td>
+        </tr>
+    </table>
     {% endfor %}
-    <td><a href="/search/{{ colum.id }}/one">詳細</a></td>
-    </tr>
-    {% endfor %}
-</table>
 {% endif%}
+
+{% if contacts.has_previous %}
+<a href="?page={{ contacts.previous_page_number }}">前へ</a>
+{% endif %}
+
+{% for num in contacts.paginator.page_range %} 
+{% ifequal num entry.number %}
+{{ num }}
+{% else %}
+<a href="?page={{ num }}">{{ num }}</a>
+{% endifequal %}
+{% endfor %}
+
+{% if contacts.has_next %}
+<a href="?page={{ contacts.next_page_number }}">次へ</a>
+{% endif %}
+
 {% endblock %}
+

@@ -1,65 +1,78 @@
 from django.http import Http404, HttpResponse,HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render,redirect
 from django.template import loader
 from django.urls import reverse
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator,InvalidPage
+
+from search.pagination import paginate
 from search.DBconnection import selectland
-#from .forms import SearchForm
+from search.LandInfotitle import landcolumns
+
 from .forms import SearchForm
 from .models import LandInfo
+
 sland = selectland()
 names = landcolumns()
 
 def one(request, landinfo_id):
     data = sland.selectone(landinfo_id)
     name = names.landname
-    return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data,'name':name})
-    #return render(request, 'search/one.html',{'app':'ひとつだけ','columns':data,})
+    return render(request, 'search/one.html',{'columns':data,'name':name})
+
+
+def index(request):
+    return render(request,'search/index.html',{'all':'./all/?page=1','search': './searchforms/?page=1'})
+
 
 def all(request):
     data = sland.selectall()
-    paginator = Paginator(data, 10)
-
-    try:
-        page_no = request.GET.get('')
-        page = paginator.page(page_no)
-    except:
-        page_no = 1
-        
-    try:
-        contacts = paginator.page(1)
-    except (EmptyPage, PageNotAnInteger):
-        contacts = paginator.page(1)
-
-    return render(request, 'search/all.html', {'columns': page.object_list, 'contacts': contacts})
-
-def onepage(request, landinfo_id):
-    data = sland.selectonepage(landinfo_id)
-    return HttpResponse(request, 'search/onepage.html', {'app': 'ひとつだけ', 'columns': data})
+    allpage = paginate(data,request)
+    pdata = allpage.page.object_list
+    return render(request, 'search/all.html', {'columns':pdata , 'contacts': allpage.contacts})
 
 def searchforms(request):
     if request.method == "POST":
-        form = SearchForm(data=request.POST)
+        form = SearchForm(request.POST)
         if form.is_valid() :
-            #このif文の中に処理を書く
-            data = sland.selectsearch(request.POST)
-            return render(request, 'search/search.html', {'form': form,'columns':data})
+            f = [
+                form.cleaned_data['title'],
+                form.cleaned_data['location'],
+                form.cleaned_data['traffic'],
+                form.cleaned_data['order'],
+                form.cleaned_data['min_price'],
+                form.cleaned_data['max_price'],
+                form.cleaned_data['min_area'],
+                form.cleaned_data['max_area'],
+            ]
+            request.session['search_form'] = f
+            return redirect('search:search_result')
     else:
         form = SearchForm()
     return render(request, 'search/search.html', {'form': form})
-
-
-def get_title(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = SearchForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
-
-    else:
-        form = SearchForm()
-
-    return render(request, 'results.html', {'form': form})
         
+def search_result(request):
+    if 'search_form' in request.session:
+        f = request.session['search_form']
+        form_data = ({
+            'title': f[0],
+            'location': f[1],
+            'traffic': f[2],
+            'order':f[3],
+            'min_price': f[4],
+            'max_price': f[5],
+            'min_area': f[6],
+            'max_area': f[7],
+        })
+
+        form = SearchForm(form_data)
+
+        data = sland.selectsearch(form_data)
+        searchpage = paginate(data,request)
+        sdata = searchpage.page.object_list
+        return render(request, 'search/search.html', {
+            'form': form,
+            'columns': sdata, 
+            'contacts': searchpage.contacts
+        })
+    else:
+        return redirect('search:searchforms')
+
