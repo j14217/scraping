@@ -32,24 +32,25 @@ prefs = [
 lands_info = []
 
 # csvファイルのヘッダ書き込みのフラグ xxx
-flag = 0
+flag = False
 
 # csvファイルのパス
 csvpath = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_su.csv"
 
 # headlessモードでブラウザの生成
-option = Options()
-option.set_headless()
-driver = webdriver.Firefox(options=option)
+# option = Options()
+# option.set_headless()
+# driver = webdriver.Firefox(options=option)
+driver = webdriver.Firefox()
 
 # サイトマップに遷移 startpage
 driver.get("https://suumo.jp/sitemap/")
 sleep(1)
 
 # 土地情報のページに遷移 landtoppage
-driver.find_element_by_xpath(
-    '/html/body/div[3]/div/div[2]/div/div[1]/div[7]/div[1]/h2/a'
-).click()
+driver.find_element_by_css_selector(
+    'div.main'
+    ).find_element_by_link_text('土地購入').click()
 land_top_url = driver.current_url
 sleep(1)
 
@@ -57,14 +58,14 @@ sleep(1)
 for pref in prefs:
     # 該当都道府県のページに遷移 xxx
     driver.find_element_by_xpath(
-        '/html/body/div[3]/div/div/div/div[2]/div/div[1]/div[8]/div[2]'
-    ).find_element_by_link_text(pref).click()
+        "/html/body/div[3]/div/div/div/div[2]/div/div[1]/div[8]/div[2]"
+        ).find_element_by_link_text(pref).click()
     sleep(1)
 
     # 該当都道府県の全土地一覧を表示 xxx
-    driver.find_element_by_xpath(
-        '/html/body/div[4]/div[1]/div[2]/div[2]/ul/li[2]/a/div'
-    ).click()
+    driver.find_element_by_css_selector(
+        "div.kr_kentop.kr_kentop--btnsearch02"
+        ).click()
     sleep(1)
 
     driver.find_element_by_xpath(
@@ -89,25 +90,21 @@ for pref in prefs:
             driver.switch_to_window(window_handles[1])
             sleep(2)
 
-            try:
-                # ポップアップを閉じる
-                driver.find_element_by_xpath(
-                    '/html/body/div[22]/div/div/div[2]/div/div/div/div/i'
-                ).click()
-            except:
-                pass
-
             if 'エラー' in driver.find_element_by_xpath(
                 '/html/head/title'
             ).text:
                 pass
             else:
                 title = driver.find_element_by_css_selector(
-                    'h1.fl.w420.mainIndexK').text
-                # 物件概要のタブをクリック
-                driver.find_element_by_xpath(
-                    '//*[@id="mainContents"]/div[1]/ul'
-                ).find_element_by_link_text("物件概要").click()
+                    'h1.fl.w420').text
+                sleep(1)
+
+                # 物件概要のタブが選択されたページに遷移
+                tab_url = driver.find_element_by_link_text(
+                    '物件概要'
+                ).get_attribute("href")
+                driver.get(tab_url)
+                sleep(1)
 
                 # 現在ページのurl取得
                 url = driver.current_url
@@ -152,8 +149,8 @@ for pref in prefs:
     print("-> Scraping is finish")
 
     # csvファイルで保存、上書きで書き込み
-    with open(csvpath, "a", encoding="utf-8") as f:
-        if flag == 0:
+    with open(csvpath, "w", encoding="utf-8") as f:
+        if not flag:
             keys = ""
             for k in lands_info[0].keys():
                 # 有無が不確定な情報を除外
@@ -162,7 +159,7 @@ for pref in prefs:
                 else:
                     keys += (k + ",")
             f.write(keys.rstrip(",") + "\n")
-            flag = 1
+            flag = True
 
         for land in lands_info:
             values = ""
