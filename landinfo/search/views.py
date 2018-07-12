@@ -20,7 +20,7 @@ def one(request, landinfo_id):
 
 
 def index(request):
-    return render(request,'search/index.html',{'all':'./all/?page=1','search': './searchforms/?page=1'})
+    return render(request,'search/index.html',{'all':'./all/','search': './searchforms/'})
 
 
 def all(request):
@@ -34,14 +34,14 @@ def searchforms(request):
         form = SearchForm(request.POST)
         if form.is_valid() :
             f = [
-                form.cleaned_data['title'],
-                form.cleaned_data['location'],
-                form.cleaned_data['traffic'],
-                form.cleaned_data['order'],
-                form.cleaned_data['min_price'],
-                form.cleaned_data['max_price'],
-                form.cleaned_data['min_area'],
-                form.cleaned_data['max_area'],
+                form.data['title'],
+                form.data['location'],
+                form.data['traffic'],
+                form.data['order'],
+                form.data['min_price'],
+                form.data['max_price'],
+                form.data['min_area'],
+                form.data['max_area'],
             ]
             request.session['search_form'] = f
             return redirect('search:search_result')
@@ -50,6 +50,28 @@ def searchforms(request):
     return render(request, 'search/search.html', {'form': form})
         
 def search_result(request):
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        data = sland.selectsearch(request.POST)
+        searchpage = paginate(data,request)
+        sdata = searchpage.page.object_list
+        request.session.clear()
+        f = [
+                form.data['title'],
+                form.data['location'],
+                form.data['traffic'],
+                form.data['order'],
+                form.data['min_price'],
+                form.data['max_price'],
+                form.data['min_area'],
+                form.data['max_area'],
+            ]
+        request.session['search_form'] = f
+        return render(request, 'search/search.html', {
+            'form': form,
+            'columns': sdata, 
+            'contacts': searchpage.contacts
+        })
     if 'search_form' in request.session:
         f = request.session['search_form']
         form_data = ({
