@@ -1,0 +1,4 @@
+site,start_page,land_page,land_link_text,pref_element,land_all_page1,land_all_page2
+athome,https://www.athome.co.jp/sitemap/,land_page,land_link_text,pref_element,land_all_page1,land_all_page2
+suumo,https://suumo.jp/sitemap/,div.main,土地購入,/html/body/div[3]/div/div/div/div[2]/div/div[1]/div[8]/div[2],div.kr_kentop.kr_kentop--btnsearch02,//*[@id="js-shiborikomiPanel"]/div[2]/a
+yahoo,https://realestate.yahoo.co.jp/,land_page,land_link_text,pref_element,land_all_page1,land_all_page2

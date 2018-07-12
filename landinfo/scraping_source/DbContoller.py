@@ -196,6 +196,9 @@ class DbContoller:
         )
         self.connection.execute(sql)
 
+    def db_insert_ya(self, land_info):
+        pass
+
     # DBのロールバック
     def db_rollback(self):
         print("-> Rollback db")
