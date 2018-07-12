@@ -68,7 +68,7 @@ class DbConnect:
                                 Column('setback', String(50)),
                                 Column('topography', String(50)),
                                 Column('total_blocks', String(50)),
-                                Column('tsubo_unit_price', String(50)),
+                                Column('tsubo_unit_price', Numeric(8, 2)),
                                 Column('units_sold_total_units', String(50)),
                                 Column('company_profile', String(200)),
                                 Column('event_info', String(200)),
@@ -192,8 +192,7 @@ class DbConnect:
             company_profile=land_info.company_profile,
             contact_infomation=land_info.contact_infomation,
             info_release_date=land_info.info_release_date,
-            next_info_update_date=land_info.next_info_update_date,
-            floor_space=0
+            next_info_update_date=land_info.next_info_update_date
         )
         self.connection.execute(sql)
 
