@@ -40,7 +40,8 @@ try:
                 else:
                     if (k == columns1.price) or \
                         (k == columns1.land_area) or \
-                            (k == columns1.floor_space):
+                        (k == columns1.floor_space) or \
+                            (k == columns1.tsubo_unit_price):
                         num = re.match("[0-9.]+", v.replace(",", ""))
                         if num:
                             info_list.append(float(num.group(0)))
@@ -104,6 +105,8 @@ try:
                             info_list.append(0)
                     elif (k == columns3.info_release_date):
                         info_list.append(datetime.strptime(v, "%Y年%m月%d日"))
+                    elif (k == columns3.traffic):
+                        info_list.append(v.replace("-", "－"))
                     else:
                         info_list.append(v)
             land_info = LandInfo_su(info_list)
