@@ -16,8 +16,12 @@
     ・csvファイルのパス(csvpath*)は任意の場所にcsvフォルダを作成し
     　そのフォルダのパスを指定してください
 
- 　○dbconnection.py：dbへの接続等のクラス
+ 　○DbContoller.py：dbへの接続等のクラス
 　
- 　○filedatadb.py：csvファイルを読み込みdbへのデータの挿入
+ 　○insert_db.py：csvファイルを読み込みdbへのデータの挿入
 　
  　○LandInfo.py：各カラム名を参照するためのクラス
+
+ ○scraping_systemフォルダ
+ 　・複数サイトへ対応するためにシステム化を行っているソース郡
+ 　・まだ一連の処理は出来ていません
