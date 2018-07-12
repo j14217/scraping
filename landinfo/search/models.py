@@ -12,7 +12,7 @@ class LandInfo(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)  # 価格(単位：万円)
     most_popular_price_range = models.CharField(
         max_length=50, null=True)  # 最多価格帯
-    tsubo_unit_price = models.CharField(max_length=50, null=True)  # 坪単価
+    tsubo_unit_price = models.DecimalField(max_digits=8, decimal_places=2,null=True)  # 坪単価
     lease_period_rent = models.CharField(
         max_length=50, null=True)  # 借地期間・地代（月額）
     right_money = models.CharField(max_length=50, null=True)  # 権利金
@@ -56,4 +56,7 @@ class LandInfo(models.Model):
     info_provider = models.CharField(max_length=200, null=True)  # 情報提供元
     info_release_date = models.DateField(null=True)  # 情報公開日
     info_update_date = models.DateField(null=True)  # 情報更新日
-    next_info_update_date = models.DateField(null=True)  # 次回更新予定日
+    next_info_update_date = models.CharField(max_length=200, null=True)  # 次回更新予定日
+    event_info = models.CharField(max_length=200, null=True) #"イベント情報"
+    other_restrictions = models.CharField(max_length=200, null=True) #"その他制限事項"
+    company_profile = models.CharField(max_length=200, null=True) #"会社概要"
