@@ -6,7 +6,7 @@ import re
 import traceback
 from datetime import datetime
 
-from dbconnection import DbConnect
+from DbContoller import DbContoller
 from LandInfo import LandColumns_at1, LandColumns_at2, LandColumns_su
 from LandInfo import LandInfo_at1, LandInfo_at2, LandInfo_su
 
@@ -16,7 +16,7 @@ csvpath3 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_su.csv"
 
 try:
     # DB操作のオブジェクトを生成
-    connect = DbConnect()
+    contoller = DbContoller()
 
     # 各土地情報のオブジェクトを生成
     columns1 = LandColumns_at1()
@@ -49,12 +49,12 @@ try:
                             info_list.append(0)
                     elif (k == columns1.info_release_date):
                         info_list.append(datetime.strptime(v, "%Y年%m月%d日"))
-                    elif k == columns1.property_no:
+                    elif (k == columns1.property_no):
                         info_list.append(int(v))
                     else:
                         info_list.append(v)
             land_info = LandInfo_at1(info_list)
-            connect.db_insert_at1(land_info)
+            contoller.db_insert_at1(land_info)
 
     # title,url,造成完成時期,引渡し時期,販売スケジュール,価格,最多価格帯,その他費用,
     # 土地面積,坪数,販売区画数,総区画数,お問い合わせ先,物件種目,所在地,交通,建蔽率/容積率,
@@ -82,7 +82,7 @@ try:
                     else:
                         info_list.append(v)
             land_info = LandInfo_at2(info_list)
-            connect.db_insert_at2(land_info)
+            contoller.db_insert_at2(land_info)
 
     with open(csvpath3, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -110,8 +110,8 @@ try:
                     else:
                         info_list.append(v)
             land_info = LandInfo_su(info_list)
-            connect.db_insert_su(land_info)
-    connect.db_commit()
+            contoller.db_insert_su(land_info)
+    contoller.db_commit()
 
 
 except:
@@ -120,10 +120,10 @@ except:
     print("---------------------------")
     print(traceback.format_exc())
     print("---------------------------")
-    connect.db_rollback()
+    contoller.db_rollback()
 finally:
     # DBの接続を閉じる
-    connect.db_close()
+    contoller.db_close()
 
 # DBへの挿入の完了を伝える旨
 print("-> Insert data for db finish")

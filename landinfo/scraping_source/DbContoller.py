@@ -10,7 +10,7 @@ from sqlalchemy import Table, Column, String, Integer, Numeric, Date, MetaData
 
 
 # DBの操作クラス
-class DbConnect:
+class DbContoller:
     # DBの接続、トランザクション開始
     def __init__(self):
         self.url = 'postgresql+psycopg2://postgres:postgres'\
