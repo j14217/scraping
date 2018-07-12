@@ -5,7 +5,6 @@ Webスクレイピングを行う
 import csv
 from time import sleep
 
-from dbconnection import DbConnect
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options
@@ -75,14 +74,12 @@ for pref in prefs:
 
     while True:
         # 土地のリスト xxx
-        item_list = []
-        item_list = driver.find_element_by_xpath(
-            '//*[@id="bukken_ichiran_JJ012FC001ActionForm"]'
-        ).find_elements_by_css_selector("div.property_unit")
+        item_list = driver.find_elements_by_css_selector(
+            "h2.property_unit-title")
 
         for item in item_list:
             # 土地ページを新しいタブで開く xxx
-            item.find_element_by_css_selector('a').click()
+            item.click()
             sleep(2)
 
             # 開いたタブに制御を移動
@@ -135,13 +132,18 @@ for pref in prefs:
         # 次のページがあるか判断
         try:
             # 次のページがあればそのページに遷移
-            driver.find_element_by_xpath(
-                '//*[@id="js-sectionBody-main"]/div[1]/div[2]'
+            driver.find_element_by_css_selector(
+                'p.pagination-parts'
             ).find_element_by_link_text("次へ").click()
             sleep(1)
         except:
             # なければループを抜けて,土地のトップに戻る
             driver.get(land_top_url)
+            sleep(1)
+            driver.find_element_by_css_selector(
+                "ol.breadcrumb-list"
+                ).find_element_by_link_text("土地").click()
+            sleep(1)
             break
 
     # 1都道府県ごとに進捗を表示
@@ -149,27 +151,27 @@ for pref in prefs:
     print("-> Scraping is finish")
 
     # csvファイルで保存、上書きで書き込み
-    with open(csvpath, "w", encoding="utf-8") as f:
-        if not flag:
-            keys = ""
-            for k in lands_info[0].keys():
-                # 有無が不確定な情報を除外
-                if (k == "物件名") or (k == " "):
-                    pass
-                else:
-                    keys += (k + ",")
-            f.write(keys.rstrip(",") + "\n")
-            flag = True
+    # with open(csvpath, "w", encoding="utf-8") as f:
+    #     if not flag:
+    #         keys = ""
+    #         for k in lands_info[0].keys():
+    #             # 有無が不確定な情報を除外
+    #             if (k == "物件名") or (k == " "):
+    #                 pass
+    #             else:
+    #                 keys += (k + ",")
+    #         f.write(keys.rstrip(",") + "\n")
+    #         flag = True
 
-        for land in lands_info:
-            values = ""
-            for k, v in land.items():
-                # 有無が不確定な情報を除外
-                if (k == "物件名") or (k == " "):
-                    pass
-                else:
-                    values += (v.replace(",", "") + ",")
-            f.write(values.replace("\n", " ").rstrip(",") + "\n")
+    #     for land in lands_info:
+    #         values = ""
+    #         for k, v in land.items():
+    #             # 有無が不確定な情報を除外
+    #             if (k == "物件名") or (k == " "):
+    #                 pass
+    #             else:
+    #                 values += (v.replace(",", "") + ",")
+    #         f.write(values.replace("\n", " ").rstrip(",") + "\n")
 
     # 書き込みの終了を伝える旨
     print("-> Writing data is finish")

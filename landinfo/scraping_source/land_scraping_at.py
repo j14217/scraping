@@ -5,7 +5,6 @@ Webスクレイピングを行う
 import csv
 from time import sleep
 
-from dbconnection import DbConnect
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options
@@ -31,50 +30,51 @@ lands_info1 = []
 lands_info2 = []
 
 # csvファイルのヘッダ書き込みのフラグ xxx
-flag1 = 0
-flag2 = 0
+flag1 = False
+flag2 = False
 
 # csvファイルのパス xxx
 csvpath1 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at1.csv"
 csvpath2 = ".\\venvtest\\Sourse\\scraping\\csv\\land_info_at2.csv"
 
 # headlessモードでブラウザの生成
-option = Options()
-option.set_headless()
-driver = webdriver.Firefox(options=option)
+# option = Options()
+# option.set_headless()
+# driver = webdriver.Firefox(options=option)
+driver = webdriver.Firefox()
 
 # サイトマップに遷移 startpage
 driver.get("https://www.athome.co.jp/sitemap/")
 sleep(1)
 
 # 土地情報のページに遷移 landtoppage
-driver.find_element_by_link_text("土地").click()
+driver.find_element_by_css_selector(
+    "div.sitemap-group_inner.clr"
+    ).find_element_by_link_text("土地").click()
 sleep(1)
 
 # 各都道府県の全土地一覧ページ遷移
 for pref in prefs:
     # 該当都道府県のページに遷移 xxx
-    driver.find_element_by_id(
-        "prefLinks").find_element_by_link_text(pref).click()
+    driver.find_element_by_css_selector(
+        "div#prefLinks"
+        ).find_element_by_link_text(pref).click()
     sleep(1)
 
     # 該当都道府県の全土地一覧を表示 xxx
-    driver.find_element_by_class_name("allList").click()
+    driver.find_element_by_css_selector("li.allList").click()
     sleep(1)
 
     # 土地情報の取得
     while True:
         # 土地のリスト xxx
-        item_list = []
         item_list = driver.find_elements_by_css_selector(
             "p.heading.object-title")
 
         # 1ページの土地情報一覧から各土地のページに移り、土地情報を取得
         for item in item_list:
-            title = item.find_element_by_css_selector(
-                "a.boxHoverLinkStop").text
             # 土地ページを新しいタブで開く xxx
-            item.find_element_by_css_selector("a.boxHoverLinkStop").click()
+            item.click()
             sleep(2)
 
             # 開いたタブに制御を移動
@@ -88,8 +88,10 @@ for pref in prefs:
             sleep(1)
 
             # 建築条件がある場合
-            if condition == "https://www.athome.co.jp/"\
-                    "inquiry/bukken/check/request/":
+            if "/inquiry/bukken/check/request/" in condition:
+                # title抽出
+                title = driver.find_element_by_css_selector("h1.h1").text
+
                 # 物件概要のタブをクリック
                 tabs = driver.find_element_by_css_selector(
                     "ul.clearfix.cm3_nav").find_elements_by_tag_name("li")
@@ -113,14 +115,16 @@ for pref in prefs:
 
             # 建築条件がない場合
             else:
+                # title抽出
+                title = driver.find_element_by_css_selector("span.name").text
                 # 現在ページのurl取得
                 url = driver.current_url
 
                 # 物件情報をテーブルから取得
-                land = driver.find_element_by_css_selector(
+                table = driver.find_element_by_css_selector(
                     "section#item-detail_data")
-                ths = land.find_elements_by_tag_name("th")
-                tds = land.find_elements_by_tag_name("td")
+                ths = table.find_elements_by_tag_name("th")
+                tds = table.find_elements_by_tag_name("td")
                 land_info = {}
                 land_info["title"] = title
                 land_info["url"] = url
@@ -139,8 +143,8 @@ for pref in prefs:
         # 次のページがあるか判断
         try:
             # 次のページがあればそのページに遷移
-            driver.find_element_by_xpath(
-                '//*[@id="item-list"]/div[1]/div[2]/ul'
+            driver.find_element_by_css_selector(
+                'ul.paging.typeInline'
             ).find_element_by_link_text("次へ").click()
             sleep(1)
         except:
@@ -153,52 +157,52 @@ for pref in prefs:
 
     # csvファイルで保存、上書きで書き込み
     # 項目が異なる2種類土地データがある
-    with open(csvpath1, "a", encoding="utf-8") as f:
-        if flag1 == 0:
-            keys = ""
-            for k in lands_info1[0].keys():
-                # 有無が不確定、不必要な情報を除外
-                if (k == "仲介手数料") or (k == "その他交通") or (k == " "):
-                    pass
-                else:
-                    keys += k + ","
-            f.write(keys.rstrip(",") + "\n")
-            flag1 = 1
+    # with open(csvpath1, "a", encoding="utf-8") as f:
+    #     if not flag1:
+    #         keys = ""
+    #         for k in lands_info1[0].keys():
+    #             # 有無が不確定、不必要な情報を除外
+    #             if (k == "仲介手数料") or (k == "その他交通") or (k == " "):
+    #                 pass
+    #             else:
+    #                 keys += k + ","
+    #         f.write(keys.rstrip(",") + "\n")
+    #         flag1 = True
 
-        for land in lands_info1:
-            values = ""
-            for k, v in land.items():
-                # 有無が不確定、不必要な情報を除外
-                if (k == "仲介手数料") or (k == "その他交通") or (k == " "):
-                    pass
-                else:
-                    values += (v.replace(",", "") + ",")
-            f.write(values.replace("\n", " ").rstrip(",") + "\n")
+    #     for land in lands_info1:
+    #         values = ""
+    #         for k, v in land.items():
+    #             # 有無が不確定、不必要な情報を除外
+    #             if (k == "仲介手数料") or (k == "その他交通") or (k == " "):
+    #                 pass
+    #             else:
+    #                 values += (v.replace(",", "") + ",")
+    #         f.write(values.replace("\n", " ").rstrip(",") + "\n")
 
-    with open(csvpath2, "a", encoding="utf-8") as f:
-        if flag2 == 0:
-            keys = ""
-            for k in lands_info2[0].keys():
-                # 有無が不確定な情報を除外
-                if (k == "販売代理") or (k == " "):
-                    pass
-                else:
-                    keys += (k + ",")
-            f.write(keys.rstrip(",") + "\n")
-            flag2 = 1
+    # with open(csvpath2, "a", encoding="utf-8") as f:
+    #     if not flag2:
+    #         keys = ""
+    #         for k in lands_info2[0].keys():
+    #             # 有無が不確定な情報を除外
+    #             if (k == "販売代理") or (k == " "):
+    #                 pass
+    #             else:
+    #                 keys += (k + ",")
+    #         f.write(keys.rstrip(",") + "\n")
+    #         flag2 = True
 
-        for land in lands_info2:
-            values = ""
-            for k, v in land.items():
-                # 有無が不確定な情報を除外
-                if (k == "販売代理") or (k == " "):
-                    pass
-                else:
-                    values += (v.replace(",", "") + ",")
-            f.write(values.replace("\n", " ").rstrip(",") + "\n")
+    #     for land in lands_info2:
+    #         values = ""
+    #         for k, v in land.items():
+    #             # 有無が不確定な情報を除外
+    #             if (k == "販売代理") or (k == " "):
+    #                 pass
+    #             else:
+    #                 values += (v.replace(",", "") + ",")
+    #         f.write(values.replace("\n", " ").rstrip(",") + "\n")
 
-    # 書き込みの終了を伝える旨
-    print("-> Writing data is finish")
+    # # 書き込みの終了を伝える旨
+    # print("-> Writing data is finish")
 
 # ブラウザの破棄
 driver.quit()
