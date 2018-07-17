@@ -19,7 +19,9 @@ class CsvInput:
 
 
 class CsvOutput:
-    def __init__(self):
+    def __init__(self, filepath, data):
+        self.filepath = filepath
+        self.data = data
         self.header_flag = True
         self.exclusion_list = [
             " ",
@@ -30,11 +32,11 @@ class CsvOutput:
         ]
 
     # csvへ書き込み
-    def csv_writer(self, filepath, lands_info):
-        with open(filepath, "a", encoding="utf-8") as f:
+    def csv_writer(self):
+        with open(self.filepath, "a", encoding="utf-8") as f:
             if self.header_flag:
                 keys = ""
-                for k in lands_info[0].keys():
+                for k in self.data[0].keys():
                     if k in self.exclusion_list:
                         pass
                     else:
@@ -42,9 +44,9 @@ class CsvOutput:
                 f.write(keys.rstrip(",") + "\n")
                 self.header_flag = False
 
-            for land in lands_info:
+            for d in self.data:
                 values = ""
-                for key, value in land.items():
+                for key, value in d.items():
                     if key in self.exclusion_list:
                         pass
                     else:
