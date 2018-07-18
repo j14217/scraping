@@ -25,31 +25,9 @@ def index(request):
 
 def all(request):
     data = sland.selectall()
-    allpage = paginate(data,request)
-    pdata = allpage.page.object_list
-    return render(request, 'search/all.html', {'columns':pdata , 'contacts': allpage.contacts})
+    return render(request, 'search/all.html', {'columns':data})
 
 def searchforms(request):
-    if request.method == "POST":
-        form = SearchForm(request.POST)
-        if form.is_valid() :
-            f = [
-                form.data['title'],
-                form.data['location'],
-                form.data['traffic'],
-                form.data['order'],
-                form.data['min_price'],
-                form.data['max_price'],
-                form.data['min_area'],
-                form.data['max_area'],
-            ]
-            request.session['search_form'] = f
-            return redirect('search:search_result')
-    else:
-        form = SearchForm()
-    return render(request, 'search/search.html', {'form': form})
-        
-def search_result(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
         data = sland.selectsearch(request.POST)
@@ -72,29 +50,27 @@ def search_result(request):
             'columns': sdata, 
             'contacts': searchpage.contacts
         })
-    if 'search_form' in request.session:
-        f = request.session['search_form']
-        form_data = ({
-            'title': f[0],
-            'location': f[1],
-            'traffic': f[2],
-            'order':f[3],
-            'min_price': f[4],
-            'max_price': f[5],
-            'min_area': f[6],
-            'max_area': f[7],
-        })
-
-        form = SearchForm(form_data)
-
-        data = sland.selectsearch(form_data)
-        searchpage = paginate(data,request)
-        sdata = searchpage.page.object_list
-        return render(request, 'search/search.html', {
-            'form': form,
-            'columns': sdata, 
-            'contacts': searchpage.contacts
-        })
     else:
-        return redirect('search:searchforms')
+        form = SearchForm()
+        return render(request, 'search/search.html', {
+            'form': form
+        })
 
+def result(request):
+    f = request.session['search_form']
+    form_data = ({
+        'title': f[0],
+        'location': f[1],
+        'traffic': f[2],
+        'order':f[3],
+        'min_price': f[4],
+        'max_price': f[5],
+        'min_area': f[6],
+        'max_area': f[7],
+    })
+    data = sland.selectsearch(form_data)
+    searchpage = paginate(data,request)
+    sdata = searchpage.page.object_list
+    return render(request, 'search/result.html', {
+        'columns': sdata,
+    })

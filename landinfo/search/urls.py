@@ -8,6 +8,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('all/', views.all, name='all'),
     path('searchforms/', views.searchforms, name='searchforms'),
-    path('search_result/', views.search_result, name='search_result'),
+    path('result/', views.result, name='result')
 ]
 
