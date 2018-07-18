@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-    <h1>{{ landinfo.title}}</h1>
-
-    <ul>
-        {% for landinfo in landinfo.landinfo_set.all %}
-            <li></li>
+<table class="alltable">
+    <thead>
+        <tr>
+            <th rowspan="3" class="columid">id</th><th colspan="3">タイトル</th><th colspan="3">住所</th>
+        </tr>
+        <tr>
+            <th colspan="6">交通</th>
+        </tr>
+        <tr>
+        <th>価格</th><th>坪単価</th><th>面積</th><th>私道負担</th><th>建蔽率</th><th>容積率</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for colum in columns %}
+            <tr>
+                <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="3"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td><td colspan="3" title="{{ colum.location }}"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td>
+            </tr>
+            <tr>
+                <td colspan="6" title="{{ colum.traffic }}">{{ colum.traffic }}</td>
+            </tr>
+            <tr>
+                <td>{{ colum.price }}万円</td><td>{{ colum.tsubo_unit_price }}万円</td><td>{{colum.land_area}}㎡</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td><td>{{ colum.floor_area_ratio }}</td>
+            </tr>
         {% endfor %}
-    </ul>
-
-    <a href="{% url 'search:detail' landinfo.id %}">Again?</a>
-</body>
-</html>
+    </tbody>
+</table>
