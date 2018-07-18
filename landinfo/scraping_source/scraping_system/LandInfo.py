@@ -4,7 +4,7 @@ DBで扱う土地情報の項目と値を扱う
 
 
 # 土地情報の項目名を扱うクラス
-# LandColumns_at1, LandColumns_at2, LandColumns_su
+# LandColumns_at1, LandColumns_at2, LandColumns_su, LandColumns_ya
 class LandColumns_at1:
     def __init__(self):
         self.title = "title"
