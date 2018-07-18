@@ -81,7 +81,7 @@ class DbContoller:
         results = self.connection.execute(select_data)
         print(results.fetchall())
 
-    # DBへの挿入at1
+    # DBへの挿入athome1
     def db_insert_at1(self, land_info):
         # pylint: disable=E1120
         sql = self.land_table.insert().values(
@@ -123,7 +123,7 @@ class DbContoller:
         )
         self.connection.execute(sql)
 
-    # DBへの挿入at2
+    # DBへの挿入athome2
     def db_insert_at2(self, land_info):
         # pylint: disable=E1120
         sql = self.land_table.insert().values(
@@ -163,6 +163,7 @@ class DbContoller:
         )
         self.connection.execute(sql)
 
+    # DBへの挿入suumo
     def db_insert_su(self, land_info):
         # pylint: disable=E1120
         sql = self.land_table.insert().values(
@@ -196,6 +197,7 @@ class DbContoller:
         )
         self.connection.execute(sql)
 
+    # DBへの挿入yahoo
     def db_insert_ya(self, land_info):
         # pylint: disable=E1120
         sql = self.land_table.insert().values(

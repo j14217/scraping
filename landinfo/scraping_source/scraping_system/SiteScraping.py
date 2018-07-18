@@ -1,3 +1,7 @@
+"""
+スクレイピングの処理をまとめたクラス
+"""
+
 from time import sleep
 
 from selenium import webdriver
@@ -6,11 +10,13 @@ from selenium.webdriver.firefox.options import Options
 
 
 class SiteScraping:
+    # コンストラクタ
     def __init__(self, config, prefs):
         self.prefs = prefs
         self.switch_flag = False
         self.land_top = ""
         self.site = config["site"]
+        # サイトごとに初期化処理の分岐
         if self.site == "athome":
             self.lands_info1 = []
             self.lands_info2 = []
@@ -50,6 +56,7 @@ class SiteScraping:
             self.next_page = config["next_page"]
             self.csv_path = config["csvpath1"]
 
+    # ブラウザを生成する
     def open_browser(self, headless_flag):
         if headless_flag:
             self.option = Options()
@@ -65,18 +72,22 @@ class SiteScraping:
             self.driver.get(self.start_page)
             sleep(1)
 
+    # ブラウザを破棄する
     def close_browser(self):
         self.driver.quit()
 
+    # 現在のページのURLを取得
     def get_url(self):
         return self.driver.current_url
 
+    # 引数に渡したURLに遷移する
     def go_url(self, url):
         self.driver.get(url)
         sleep(1)
 
-    # 土地情報のページに遷移
+    # 土地情報のトップページに遷移
     def move_land_page(self, action):
+        # ページに遷移する時
         if action == "go":
             self.driver.find_element_by_css_selector(
                 self.land_page_go
@@ -84,7 +95,9 @@ class SiteScraping:
                 self.land_link_text
             ).click()
 
+        # ページに戻る時
         elif action == "back":
+            # サイトごとに分岐
             if self.site == "athome":
                 pass
 
@@ -106,6 +119,7 @@ class SiteScraping:
 
     # 該当都道府県のページに遷移
     def go_pref_page(self, pref):
+        # サイトごとに分岐
         if self.site == "athome":
             self.driver.find_element_by_css_selector(
                 self.pref_element
@@ -135,6 +149,7 @@ class SiteScraping:
 
     # 該当都道府県の全土地一覧を表示
     def go_land_list_page(self):
+        # サイトごとに分岐
         if self.site == "athome":
             self.driver.find_element_by_css_selector(
                 self.land_all_page1
@@ -155,12 +170,13 @@ class SiteScraping:
 
         sleep(1)
 
-    # 土地のリスト
+    # 土地のリストを取得
     def get_land_list(self):
         land_list = self.driver.find_elements_by_css_selector(
             self.land_list)
         return land_list
 
+    # ページングを辿る
     def go_next_page(self):
         self.driver.find_element_by_css_selector(
             self.next_page
@@ -169,26 +185,31 @@ class SiteScraping:
 
     # タブの制御切り替え
     def window_switch(self):
+        # 別のタブに切り替えるとき
         if not self.switch_flag:
             self.window_handles = self.driver.window_handles
             self.driver.switch_to_window(self.window_handles[1])
             self.switch_flag = True
-
+        # 元のタブに切り替えるとき
         else:
             self.driver.switch_to_window(self.window_handles[0])
             self.switch_flag = False
         sleep(2)
 
+    # 詳細情報のタブを開く
     def open_land_tab(self, land):
         land.find_element_by_tag_name("a").click()
         sleep(2)
         self.window_switch()
 
+    # タブを閉じる
     def close_land_tab(self):
         self.driver.close()
         self.window_switch()
 
+    # スクレイピングを行う
     def scraping_data(self):
+        # サイトごとに分岐
         if self.site == "athome":
             # 建築条件の有無を判断 xxx
             condition = self.driver.find_element_by_css_selector(

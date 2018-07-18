@@ -14,6 +14,8 @@ from LandInfo import LandInfo_at1, LandInfo_at2, LandInfo_su, LandInfo_ya
 
 # 各土地情報のオブジェクトを生成
 config_input = CsvInput()
+
+# 挿入するデータの抽出元サイト名を引数に渡す
 config = config_input.config_reader("yahoo")
 
 try:
@@ -21,6 +23,7 @@ try:
     contoller = DbContoller()
 
     # csvファイルから情報を取り出して、DBに挿入
+    # サイト名で分岐
     if config["site"] == "athome":
         columns_at1 = LandColumns_at1()
         columns_at2 = LandColumns_at2()
