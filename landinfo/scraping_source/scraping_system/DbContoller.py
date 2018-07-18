@@ -52,7 +52,7 @@ class DbContoller:
                                 Column('most_popular_price_range', String(50)),
                                 Column('next_info_update_date', String(200)),
                                 Column('notices', String(200)),
-                                Column('optimal_use', String(50)),
+                                Column('optimal_use', String(200)),
                                 Column('other_expenses', String(50)),
                                 Column('parking', String(200)),
                                 Column('price', Numeric(8, 2)),

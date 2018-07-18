@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from .models import LandInfo
 
 class selectland():
+    #DB接続部分
     url = 'postgresql://postgres:postgres@192.168.0.159:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
@@ -62,14 +63,15 @@ class selectland():
         Column('units_sold_total_units', String),
     )
 
-    #引数のdataにはレコードが存在するよう加工する必要あり(selectall参照)
+    #カラム内のNoneデータを文字列「-」に変更する機能
+    #※実装しているのはselectallのみ
     def None_delete(self,data):
         dictdata = dict(data)
         for colum in dictdata:
             if dictdata[colum] == None:
                 dictdata[colum] = '-'
         return dictdata
-
+    #DBの全レコードを受け取る
     def selectall(self):
         ds =[]
         s = select([self.land_info])
@@ -79,16 +81,19 @@ class selectland():
             dictd = self.None_delete(colum) 
             ds.append(dictd)
         return ds
+    #IDに紐づいたレコード一件の表示(詳細画面用)
     def selectone(self,landinfo_id):
         s = select([self.land_info], self.land_info.c.id == landinfo_id)
         result = self.conn.execute(s)
         data = result.fetchone()
         return data
+    #検索フォームの条件を基に絞り込む機能
+    #keywords:POSTリクエストで受け取った辞書データ
     def selectsearch(self,keywords):
         jouken ={}
         data = self.session.query(self.land_info)
 
-        #価格上限
+        #価格上限(入力フォームが空の場合、処理を飛ばす)
         if keywords['max_price'] !='':
             data = data.filter(self.land_info.c.price <= keywords['max_price'])
         #価格下限
@@ -111,6 +116,8 @@ class selectland():
         #交通検索
         if keywords['traffic'] !='':
             jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
+
+        #各検索ワードで絞込み
         for filter_land in jouken.values(): 
             data = data.filter(filter_land)
 
@@ -128,14 +135,8 @@ class selectland():
         elif keywords['order'] == '6':
             data = data.order_by(self.land_info.c.land_area)
         
-
+        #ソート実行
         data = data.all()
-        return data
-
-    def selectonepage(self, landinfo_id):
-        s = select([self.land_info], self.land_info.c.id == landinfo_id)[landinfo_id-1:landinfo_id+5]
-        result = self.conn.execute(s)
-        data = result.fetchone()
         return data
 
 
