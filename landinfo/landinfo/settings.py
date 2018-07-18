@@ -79,8 +79,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'scrapingland',
-        'HOST': '192.168.0.109',
+        'PASSWORD': 'postgres',
+        'HOST': '192.168.0.159',
         'PORT': '5432',
     }
 }
@@ -137,3 +137,5 @@ PAGINATION_SETTINGS = {
     'MAGIN_PAGES_DISPLAYED': 1,
     'SHOW_FIRST_PAGE_WHEN_INVALID': True,
 }
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE =True

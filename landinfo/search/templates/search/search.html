@@ -6,41 +6,72 @@
     <table>
     {{form.as_table}}
     </table>
-    <input type="hidden" name="scroll_top" value="" class="st">
 
-    <input type="submit" value="検索"/>
+    <input type="submit" value="検索">
 </form>
-    {% if columns != null %}
-    {% for colum in columns %}
-    <table class="alltable">
-        <tr>
-        <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="4"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td>
-        </tr>
-        <tr>
-        <td title="{{ colum.traffic }}" class="long">{{ colum.traffic }}</td><td>{{ colum.price }}万円</td><td>{{colum.land_area}}㎡</td><td>{{ colum.floor_area_ratio }}</td>
-        </tr>
-        <tr>
-        <td title="{{ colum.location }}" class="long"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td>{{ colum.tsubo_unit_price }}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td>
-        </tr>
-    </table>
-    {% endfor %}
-{% endif%}
 
+<div class="paginate">
+    <div class="contents">
 {% if contacts.has_previous %}
-<a href="?page={{ contacts.previous_page_number }}">前へ</a>
+        <a href="../result?page={{ contacts.previous_page_number }}">前へ</a>
 {% endif %}
 
 {% for num in contacts.paginator.page_range %} 
 {% ifequal num entry.number %}
 {{ num }}
 {% else %}
-<a href="?page={{ num }}">{{ num }}</a>
+        <a href="../result?page={{ num }}">{{ num }}</a>
 {% endifequal %}
 {% endfor %}
 
-{% if contacts.has_next %}
-<a href="?page={{ contacts.next_page_number }}">次へ</a>
-{% endif %}
 
+{% if contacts.has_next %}
+        <a href="../result?page={{ contacts.next_page_number }}">次へ</a>
+{% endif %}
+    </div>
+</div>
+
+<div class="result"></div>
+
+<script type="text/javascript">
+    $(function(){
+        //ページを表示させる箇所の設定
+        var $content = $('.result');
+        //ボタンをクリックした時の処理
+        $(document).on('click', '.paginate a', function(event) {
+            event.preventDefault();
+            //.gnavi aのhrefにあるリンク先を保存
+            var link = $(this).attr("href");
+            //リンク先が今と同じであれば遷移しない
+            if(link == lastpage){
+                return false;
+            }else{
+                $content.fadeOut(600, function() {
+                    getPage(link);
+                });
+                //今のリンク先を保存
+                lastpage = link;
+            }
+            
+        });
+        //初期設定
+        getPage("../result?page=1");
+        var lastpage = "../result?page=1.html";
+
+        //ページを取得してくる
+        function getPage(elm){
+            $.ajax({
+                type: 'GET',
+                url: elm,
+                dataType: 'html',
+                success: function(data){
+                    $content.html(data).fadeIn(600);
+                },
+                error:function() {
+                       }
+            });
+        }
+    });
+</script>
 {% endblock %}
 
