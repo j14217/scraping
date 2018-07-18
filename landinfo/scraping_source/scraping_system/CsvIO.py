@@ -1,9 +1,11 @@
 import csv
 
 
+# csvファイル読み込みクラス
 class CsvInput:
     def __init__(self):
-        self.config_path = ".\\venvtest\\Sourse\\scraping\\csv\\config.csv"
+        self.config_path = ".\\scraping_source\\scraping_system"\
+            "\\csv\\config.csv"
 
     # 設定ファイルの読み込み
     def config_reader(self, site):
@@ -15,11 +17,12 @@ class CsvInput:
             return config
 
 
+# csvファイル書込みクラス
 class CsvOutput:
     def __init__(self, filepath):
         self.filepath = filepath
         self.header_flag = True
-        self.exclusion_list_atsu = [
+        self.exclusion_list_at_su = [
             " ",
             "仲介手数料",
             "その他交通",
@@ -39,8 +42,9 @@ class CsvOutput:
             if self.header_flag:
                 keys = ""
                 for k in data[0].keys():
+                    # 除外する要素をサイトごとに分岐
                     if (site == "athome") or (site == "suumo"):
-                        if k in self.exclusion_list_atsu:
+                        if k in self.exclusion_list_at_su:
                             pass
                         else:
                             keys += (k + ",")
@@ -55,8 +59,9 @@ class CsvOutput:
             for d in data:
                 values = ""
                 for key, value in d.items():
+                    # 除外する要素をサイトごとに分岐
                     if (site == "athome") or (site == "suumo"):
-                        if key in self.exclusion_list_atsu:
+                        if key in self.exclusion_list_at_su:
                             pass
                         else:
                             values += (
