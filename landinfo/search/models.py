@@ -2,7 +2,7 @@ from django.db import models
 from django.core import validators
 # Create your models here.
 
-
+#モデル部分(DBの定義)
 class LandInfo(models.Model):
     title = models.CharField(max_length=200)  # title
     url = models.URLField(max_length=250)  # url
@@ -29,7 +29,7 @@ class LandInfo(models.Model):
     total_blocks = models.CharField(max_length=50, null=True)  # 総区画数
     units_sold_total_units = models.CharField(
         max_length=50, null=True)  # 販売戸数/総戸数
-    optimal_use = models.CharField(max_length=50, null=True)  # 最適用途
+    optimal_use = models.CharField(max_length=200, null=True)  # 最適用途
     private_road_burden = models.CharField(max_length=50, null=True)  # 私道負担
     land_rights = models.CharField(max_length=50, null=True)  # 土地権利
     city_planning = models.CharField(max_length=50, null=True)  # 都市計画

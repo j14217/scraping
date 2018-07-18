@@ -1,4 +1,4 @@
-
+#詳細画面用レコード項目
 class landcolumns:
     landname = [
         "title",

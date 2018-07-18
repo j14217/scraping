@@ -9,7 +9,7 @@
 
     <input type="submit" value="検索">
 </form>
-
+<!--  ページング部分(始)　-->
 <div class="paginate">
     <div class="contents">
 {% if contacts.has_previous %}
@@ -24,13 +24,13 @@
 {% endifequal %}
 {% endfor %}
 
-
 {% if contacts.has_next %}
         <a href="../result?page={{ contacts.next_page_number }}">次へ</a>
 {% endif %}
     </div>
 </div>
-
+<!--  ページング部分(終)　-->
+<!--  resultクラスのタグ内jqueryで検索結果ページを表示　-->
 <div class="result"></div>
 
 <script type="text/javascript">
@@ -40,7 +40,7 @@
         //ボタンをクリックした時の処理
         $(document).on('click', '.paginate a', function(event) {
             event.preventDefault();
-            //.gnavi aのhrefにあるリンク先を保存
+            //.paginateクラス内のaタグのリンク先を保存
             var link = $(this).attr("href");
             //リンク先が今と同じであれば遷移しない
             if(link == lastpage){

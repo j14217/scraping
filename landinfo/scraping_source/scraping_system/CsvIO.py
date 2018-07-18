@@ -4,7 +4,7 @@ import csv
 # csvファイル読み込みクラス
 class CsvInput:
     def __init__(self):
-        self.config_path = ".\\scraping_source\\scraping_system"\
+        self.config_path = ".\\landinfo\\scraping_source\\scraping_system"\
             "\\csv\\config.csv"
 
     # 設定ファイルの読み込み
