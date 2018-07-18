@@ -20,42 +20,46 @@ from DbContoller import DbContoller
 #    "長崎県", "大分県", "熊本県", "宮崎県", "鹿児島県", "沖縄県"
 # ]
 
-# athomeテスト用(島根27件,鳥取83件)
-# prefs = [
-#     "島根"
-# ]
-
-# suumoテスト用(沖縄県60件:約12分)
-# prefs = [
-#     "沖縄県"
-# ]
-
-# yahooテスト用(青森4件,秋田35件)
-prefs = [
-    "青森", "秋田"
-]
-
 # 設定ファイルを読み込む、サイト名を指定
 config = {}
 csv_input = CsvInput()
-config = csv_input.config_reader("yahoo")
+config = csv_input.config_reader("athome")
 
 # スクレイピング処理のオブジェクト生成
-scraping = SiteScraping(config, prefs)
-
-if scraping.site == "athome":
+if config["site"] == "athome":
+    # athomeテスト用
+    # 島根27件(3.6min, headless:), 鳥取83件(10.3min, headless:)
+    prefs = [
+        "島根", "鳥取"
+    ]
+    scraping = SiteScraping(config, prefs)
     csv_output1 = CsvOutput(scraping.csv_path1)
     csv_output2 = CsvOutput(scraping.csv_path2)
-else:
+
+elif config["site"] == "suumo":
+    # suumoテスト用
+    # 沖縄県60件(約12分, headless:)
+    prefs = [
+        "沖縄県"
+    ]
+    scraping = SiteScraping(config, prefs)
     csv_output = CsvOutput(scraping.csv_path)
 
-start_time = time()
+elif config["site"] == "yahoo":
+    # yahooテスト用
+    # 青森4件(, headless:), 秋田35件(, headless:))
+    prefs = [
+        "青森", "秋田"
+    ]
+    scraping = SiteScraping(config, prefs)
+    csv_output = CsvOutput(scraping.csv_path)
 
 # ブラウザ生成(headlessにするかTrue/Falseで指定)
 scraping.open_browser(False)
 scraping.move_land_page("go")
 
 for pref in scraping.prefs:
+    start_time = time()
     scraping.go_pref_page(pref)
     scraping.go_land_list_page()
     while True:
