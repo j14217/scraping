@@ -197,7 +197,26 @@ class DbContoller:
         self.connection.execute(sql)
 
     def db_insert_ya(self, land_info):
-        pass
+        # pylint: disable=E1120
+        sql = self.land_table.insert().values(
+            title=land_info.title,
+            url=land_info.url,
+            price=land_info.price,
+            location=land_info.location,
+            traffic=land_info.traffic,
+            conditions_etc=land_info.conditions_etc,
+            land_area=land_info.land_area,
+            build_cov_area_ratio=land_info.build_cov_area_ratio,
+            private_road_burden=land_info.private_road_burden,
+            estab_completion_time=land_info.estab_completion_time,
+            delivery=land_info.delivery,
+            current_status=land_info.current_status,
+            geography=land_info.geography,
+            optimal_use=land_info.optimal_use,
+            usage_area=land_info.usage_area,
+            land_rights=land_info.land_rights
+        )
+        self.connection.execute(sql)
 
     # DBのロールバック
     def db_rollback(self):

@@ -39,6 +39,16 @@ class SiteScraping:
 
         elif self.site == "yahoo":
             self.lands_info = []
+            self.start_page = config["start_page"]
+            self.land_page_go = config["land_page_go"]
+            self.land_page_back = config["land_page_back"]
+            self.land_link_text = config["land_link_text"]
+            self.pref_element = config["pref_element"]
+            self.land_all_page1 = config["land_all_page1"]
+            self.land_all_page2 = config["land_all_page2"]
+            self.land_list = config["land_list"]
+            self.next_page = config["next_page"]
+            self.csv_path = config["csvpath1"]
 
     def open_browser(self, headless_flag):
         if headless_flag:
@@ -77,6 +87,7 @@ class SiteScraping:
         elif action == "back":
             if self.site == "athome":
                 pass
+
             elif self.site == "suumo":
                 self.go_url(self.land_top)
                 self.driver.find_element_by_css_selector(
@@ -84,8 +95,13 @@ class SiteScraping:
                 ).find_element_by_link_text(
                     self.land_link_text
                 ).click()
+
             elif self.site == "yahoo":
-                pass
+                self.driver.find_element_by_css_selector(
+                    self.land_page_back
+                ).find_element_by_link_text(
+                    self.land_link_text
+                ).click()
         sleep(1)
 
     # 該当都道府県のページに遷移
@@ -94,13 +110,28 @@ class SiteScraping:
             self.driver.find_element_by_css_selector(
                 self.pref_element
             ).find_element_by_link_text(pref).click()
-            sleep(1)
+
         elif self.site == "suumo":
             self.driver.find_element_by_xpath(
                 self.pref_element
             ).find_element_by_link_text(pref).click()
             sleep(1)
             self.land_top = self.get_url()
+
+        elif self.site == "yahoo":
+            if pref == "北海道":
+                self.driver.find_element_by_css_selector(
+                    self.pref_element
+                ).find_element_by_css_selector(
+                    "ul.innerList.cf"
+                ).find_element_by_link_text(pref).click()
+                sleep(1)
+            else:
+                self.driver.find_element_by_css_selector(
+                    self.pref_element
+                ).find_element_by_link_text(pref).click()
+                sleep(1)
+        sleep(1)
 
     # 該当都道府県の全土地一覧を表示
     def go_land_list_page(self):
@@ -118,7 +149,10 @@ class SiteScraping:
                 self.land_all_page2).click()
 
         elif self.site == "yahoo":
-            pass
+            land_all_url = self.driver.find_element_by_css_selector(
+                self.land_all_page1).get_attribute(self.land_all_page2)
+            self.go_url(land_all_url)
+
         sleep(1)
 
     # 土地のリスト
@@ -145,7 +179,6 @@ class SiteScraping:
             self.switch_flag = False
         sleep(2)
 
-    # ここでクリックできていないので、ウィンドウが1つしかない
     def open_land_tab(self, land):
         land.find_element_by_tag_name("a").click()
         sleep(2)
@@ -251,4 +284,22 @@ class SiteScraping:
                 self.lands_info.append(land_info)
 
         elif self.site == "yahoo":
-            pass
+            # タイトル
+            title = self.driver.find_element_by_css_selector(
+                "h1.ttlLarge4").text
+
+            # 現在ページのurl取得
+            url = self.get_url()
+
+            # 情報のテーブル
+            land_info = {}
+            land_info["title"] = title
+            land_info["url"] = url
+            table = self.driver.find_element_by_css_selector(
+                "table.tblData.marBtm25")
+            trs = table.find_elements_by_tag_name("tr")
+            for tr in trs:
+                th = tr.find_element_by_tag_name("th").text
+                td = tr.find_element_by_tag_name("td").text
+                land_info[th] = td
+            self.lands_info.append(land_info)

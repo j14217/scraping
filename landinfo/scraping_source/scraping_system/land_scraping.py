@@ -21,26 +21,37 @@ from DbContoller import DbContoller
 # ]
 
 # athomeテスト用(島根27件,鳥取83件)
-prefs = [
-    "島根"
-]
+# prefs = [
+#     "島根"
+# ]
 
 # suumoテスト用(沖縄県60件:約12分)
 # prefs = [
 #     "沖縄県"
 # ]
 
+# yahooテスト用(青森4件,秋田35件)
+prefs = [
+    "青森", "秋田"
+]
+
+# 設定ファイルを読み込む、サイト名を指定
 config = {}
-config_path = ".\\venvtest\\Sourse\\scraping\\csv\\config.csv"
-
 csv_input = CsvInput()
+config = csv_input.config_reader("yahoo")
 
-config = csv_input.config_reader("athome", config_path)
-
+# スクレイピング処理のオブジェクト生成
 scraping = SiteScraping(config, prefs)
+
+if scraping.site == "athome":
+    csv_output1 = CsvOutput(scraping.csv_path1)
+    csv_output2 = CsvOutput(scraping.csv_path2)
+else:
+    csv_output = CsvOutput(scraping.csv_path)
 
 start_time = time()
 
+# ブラウザ生成(headlessにするかTrue/Falseで指定)
 scraping.open_browser(False)
 scraping.move_land_page("go")
 
@@ -48,8 +59,8 @@ for pref in scraping.prefs:
     scraping.go_pref_page(pref)
     scraping.go_land_list_page()
     while True:
-
         land_list = scraping.get_land_list()
+
         for land in land_list:
             scraping.open_land_tab(land)
             scraping.scraping_data()
@@ -71,13 +82,13 @@ for pref in scraping.prefs:
     print("-> Scraping is finish : " + str(progress_time) + "min")
 
     if scraping.site == "athome":
-        csv_output1 = CsvOutput(scraping.csv_path1, scraping.lands_info1)
-        csv_output2 = CsvOutput(scraping.csv_path2, scraping.lands_info2)
-        csv_output1.csv_writer()
-        csv_output2.csv_writer()
+        csv_output1.csv_writer(scraping.site, scraping.lands_info1)
+        csv_output2.csv_writer(scraping.site, scraping.lands_info2)
+        scraping.lands_info1 = []
+        scraping.lands_info2 = []
 
     else:
-        csv_output = CsvOutput(scraping.csv_path1, scraping.lands_info)
-        csv_output.csv_writer()
+        csv_output.csv_writer(scraping.site, scraping.lands_info)
+        scraping.lands_info = []
 
 scraping.close_browser()
