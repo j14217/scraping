@@ -15,8 +15,8 @@ from .models import LandInfo
 sland = selectland()
 names = landcolumns()
 
-#詳細画面 http://127.0.0.1:8000/search/(レコードのid)/one
-def one(request, landinfo_id):
+#詳細画面 http://127.0.0.1:8000/search/(レコードのid)/detail
+def detail(request, landinfo_id):
     data = sland.selectone(landinfo_id)
     name = names.landname
     return render(request, 'search/one.html',{'columns':data,'name':name})

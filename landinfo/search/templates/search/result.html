@@ -14,7 +14,7 @@
     <tbody>
         {% for colum in columns %}
             <tr>
-                <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="3"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td><td colspan="3" title="{{ colum.location }}"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td>
+                <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="3"><a href="/search/{{ colum.id }}/detail">{{colum.title}}</a></td><td colspan="3" title="{{ colum.location }}"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td>
             </tr>
             <tr>
                 <td colspan="6" title="{{ colum.traffic }}">{{ colum.traffic }}</td>

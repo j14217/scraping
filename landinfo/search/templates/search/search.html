@@ -30,31 +30,26 @@
     </div>
 </div>
 <!--  ページング部分(終)　-->
-<!--  resultクラスのタグ内jqueryで検索結果ページを表示　-->
+<!--  resultクラスのタグ内にjqueryで検索結果ページを表示　-->
 <div class="result"></div>
 
+<!--  検索結果をページングと紐付けて出力　-->
+<!--  ※jsファイルで以下の処理を読み込むと
+    　　GETリクエストがループする不具合あり　-->
 <script type="text/javascript">
     $(function(){
         //ページを表示させる箇所の設定
         var $content = $('.result');
-        //ボタンをクリックした時の処理
+        //ページリンクをクリックした時の処理
         $(document).on('click', '.paginate a', function(event) {
             event.preventDefault();
             //.paginateクラス内のaタグのリンク先を保存
             var link = $(this).attr("href");
-            //リンク先が今と同じであれば遷移しない
-            if(link == lastpage){
-                return false;
-            }else{
-                $content.fadeOut(600, function() {
-                    getPage(link);
+            $content.fadeOut(600, function() {
+                getPage(link);
                 });
-                //今のリンク先を保存
-                lastpage = link;
-            }
-            
-        });
-        //初期設定
+            });
+        //初期表示
         getPage("../result?page=1");
         var lastpage = "../result?page=1.html";
 
@@ -65,6 +60,7 @@
                 url: elm,
                 dataType: 'html',
                 success: function(data){
+                    //成功時の処理
                     $content.html(data).fadeIn(600);
                 },
                 error:function() {
