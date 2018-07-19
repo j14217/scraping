@@ -19,7 +19,7 @@ names = landcolumns()
 def detail(request, landinfo_id):
     data = sland.selectone(landinfo_id)
     name = names.landname
-    return render(request, 'search/one.html',{'columns':data,'name':name})
+    return render(request, 'search/detail.html',{'columns':data,'name':name})
 
 #インデックス画面 http://127.0.0.1:8000/search/
 def index(request):
