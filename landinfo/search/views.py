@@ -37,7 +37,6 @@ def searchforms(request):
         form = SearchForm(request.POST)
         data = sland.selectsearch(request.POST)
         searchpage = paginate(data,request)
-        sdata = searchpage.page.object_list
         request.session.clear()
         #セッションに検索フォームのデータを格納
         f = [
@@ -53,7 +52,6 @@ def searchforms(request):
         request.session['search_form'] = f
         return render(request, 'search/search.html', {
             'form': form,
-            'columns': sdata, 
             'contacts': searchpage.contacts
         })
     #検索画面初期表示(検索フォームだけ表示)
