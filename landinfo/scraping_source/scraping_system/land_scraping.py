@@ -23,12 +23,12 @@ from DbContoller import DbContoller
 # 設定ファイルを読み込む、サイト名を指定
 config = {}
 csv_input = CsvInput()
-config = csv_input.config_reader("athome")
+config = csv_input.config_reader("suumo")
 
 # スクレイピング処理のオブジェクト生成
 if config["site"] == "athome":
     # athomeテスト用
-    # 島根27件(3.6min, headless:), 鳥取83件(10.3min, headless:)
+    # 島根27件(3.7min, headless:3.8min), 鳥取83件(10.4min, headless:10.5min)
     prefs = [
         "島根", "鳥取"
     ]
@@ -38,7 +38,7 @@ if config["site"] == "athome":
 
 elif config["site"] == "suumo":
     # suumoテスト用
-    # 沖縄県60件(約12分, headless:)
+    # 沖縄県60件(11.4min, headless:11.5min)
     prefs = [
         "沖縄県"
     ]
@@ -47,7 +47,7 @@ elif config["site"] == "suumo":
 
 elif config["site"] == "yahoo":
     # yahooテスト用
-    # 青森4件(, headless:), 秋田35件(, headless:))
+    # 青森4件(0.6min, headless:0.8min), 秋田35件(4.0min, headless:4.1min))
     prefs = [
         "青森", "秋田"
     ]

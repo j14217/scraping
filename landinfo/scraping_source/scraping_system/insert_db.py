@@ -148,6 +148,8 @@ try:
                                 info_list.append(0)
                         elif (k == columns_ya.build_cov_area_ratio):
                             info_list.append(v.replace("-", "－"))
+                        elif (k == columns_ya.location):
+                            info_list.append(v.replace(" [地図を確認]", ""))
                         else:
                             info_list.append(v)
                 land_info = LandInfo_ya(info_list)
