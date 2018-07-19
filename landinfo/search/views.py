@@ -19,7 +19,7 @@ names = landcolumns()
 def detail(request, landinfo_id):
     data = sland.selectone(landinfo_id)
     name = names.landname
-    return render(request, 'search/one.html',{'columns':data,'name':name})
+    return render(request, 'search/detail.html',{'columns':data,'name':name})
 
 #インデックス画面 http://127.0.0.1:8000/search/
 def index(request):
@@ -37,7 +37,6 @@ def searchforms(request):
         form = SearchForm(request.POST)
         data = sland.selectsearch(request.POST)
         searchpage = paginate(data,request)
-        sdata = searchpage.page.object_list
         request.session.clear()
         #セッションに検索フォームのデータを格納
         f = [
@@ -53,7 +52,6 @@ def searchforms(request):
         request.session['search_form'] = f
         return render(request, 'search/search.html', {
             'form': form,
-            'columns': sdata, 
             'contacts': searchpage.contacts
         })
     #検索画面初期表示(検索フォームだけ表示)
