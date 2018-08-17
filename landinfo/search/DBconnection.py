@@ -3,14 +3,17 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,a
 from sqlalchemy.sql import select
 from sqlalchemy.orm import sessionmaker
 from .models import LandInfo
+from django.db import connection
 
 class selectland():
     #DB接続部分
-    url = 'postgresql://postgres:postgres@192.168.0.159:5432/postgres'
+    #url = 'postgresql://postgres:postgres@192.168.0.159:5432/postgres'
+    #localhostに変換
+    url = 'postgresql://postgres:postgres@127.0.0.1:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
-    Session = sessionmaker(bind = engine)
-    session = Session()
+    #Session = sessionmaker(bind = engine)
+    #session = Session()
     metadata = MetaData()
     land_info = Table('search_landinfo', metadata,
         Column('id', Integer, primary_key=True),
@@ -90,7 +93,51 @@ class selectland():
     #検索フォームの条件を基に絞り込む機能
     #keywords:POSTリクエストで受け取った辞書データ
     def selectsearch(self,keywords):
-        jouken ={}
+        
+        #DjangoのオブジェクトでQuerySetを生成
+        data = LandInfo.objects.all()
+
+        #filterに使用できる各メソッドの参考：https://codelab.website/django-queryset-filter/
+        #価格上限(入力フォームが空の場合、処理を飛ばす)
+        if keywords['max_price']:
+            data = data.filter(price__lte = keywords['max_price'])
+        #価格下限
+        if keywords['min_price']:
+            data = data.filter(price__gte = keywords['min_price'])
+        #面積上限
+        if keywords['max_area']:
+            data = data.filter(land_area__lte = keywords['max_area'])
+        #面積下限
+        if keywords['min_area']:
+            data = data.filter(land_area__gte = keywords['min_area'])
+        #タイトル検索(部分一致大文字小文字区別なし)
+        if keywords['title']:
+            data = data.filter(title__icontains = keywords['title'])
+        #所在地検索(部分一致大文字小文字区別なし)
+        if keywords['location']:
+            data = data.filter(location__icontains = keywords['location'])
+        #交通検索
+        if keywords['traffic']:
+            data = data.filter(traffic__icontains = keywords['traffic'])
+        #価格の順番
+        if keywords['order'] == '1':
+            data = data.order_by('price')
+        elif keywords['order'] == '2':
+            data = data.order_by('-price')
+        elif keywords['order'] == '3':
+            data = data.order_by('tsubo_unit_price')
+        elif keywords['order'] == '4':
+            data = data.order_by('-tsubo_unit_price')
+        elif keywords['order'] == '5':
+            data = data.order_by('land_area')
+        elif keywords['order'] == '6':
+            data = data.order_by('-land_area')
+        #ソート実行
+        data = data.all()
+        '''
+        元コード
+
+        jouken = {}
         data = self.session.query(self.land_info)
 
         #価格上限(入力フォームが空の場合、処理を飛ばす)
@@ -118,7 +165,7 @@ class selectland():
             jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
 
         #各検索ワードで絞込み
-        for filter_land in jouken.values(): 
+        for filter_land in jouken.values():
             data = data.filter(filter_land)
 
         #価格の順番
@@ -137,6 +184,8 @@ class selectland():
         
         #ソート実行
         data = data.all()
+        '''
+        
         return data
 
 

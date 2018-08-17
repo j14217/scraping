@@ -80,7 +80,9 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '192.168.0.159',
+        #localhostに変換
+        #'HOST': '192.168.0.159',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }

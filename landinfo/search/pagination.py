@@ -1,9 +1,9 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator,InvalidPage
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, InvalidPage
 #ページング機能
 class paginate():
     #data:検索結果のデータ
     #request:コントロール側で受け取ったリクエストデータ
-    def __init__(self,data,request):
+    def __init__(self, data, request):
         #検索結果を10レコード区切りで分割
         paginator = Paginator(data, 10)
         try:

@@ -1,32 +1,39 @@
 {% extends "./base.html" %}
 {% block body %}
-<form action="" method="POST">
+<form action="" method="POST" id="search_form">
     {% csrf_token %}
 
     <table>
     {{form.as_table}}
     </table>
 
-    <input type="submit" value="検索">
+    <!--<input type="submit" value="検索">-->
 </form>
+<!-- debug用の部分 -->
+<div id='test'></div>
+<!-- 予測した結果: count -->
+<div id='count'></div>
 <!--  ページング部分(始)　-->
 <div class="paginate">
     <div class="contents">
-{% if contacts.has_previous %}
-        <a href="../result?page={{ contacts.previous_page_number }}">前へ</a>
-{% endif %}
+        {% if contacts.has_previous %}
+        <a href="?page={{ contacts.previous_page_number }}">前へ</a>
+        <!--<a href="../result?page={{ contacts.previous_page_number }}">前へ</a>-->
+        {% endif %}
 
-{% for num in contacts.paginator.page_range %} 
-{% ifequal num entry.number %}
-{{ num }}
-{% else %}
-        <a href="../result?page={{ num }}">{{ num }}</a>
-{% endifequal %}
-{% endfor %}
+        {% for num in contacts.paginator.page_range %} 
+            {% ifequal num entry.number %}
+                {{ num }}
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+                <!--<a href="../result?page={{ num }}">{{ num }}</a>-->
+            {% endifequal %}
+        {% endfor %}
 
-{% if contacts.has_next %}
-        <a href="../result?page={{ contacts.next_page_number }}">次へ</a>
-{% endif %}
+        {% if contacts.has_next %}
+            <a href="?page={{ contacts.next_page_number }}">次へ</a>
+            <!--<a href="../result?page={{ contacts.next_page_number }}">次へ</a>-->
+        {% endif %}
     </div>
 </div>
 <!--  ページング部分(終)　-->
@@ -49,16 +56,42 @@
                 getPage(link);
                 });
             });
+
+        $("#search_form").bind('input propertychange', function(){
+
+            //$('#test').html("<p>" + $(this.max_price).val() + "</p>")
+            $.ajax({
+                url: '{% url "search:ajax_search" %}',
+                data: $('form').serializeArray(),
+                type: 'POST',
+                dataType: 'json',
+                success: function(data){
+                    if(typeof data.count != 'number'){
+                        $('#count').html("<p>" + data.count + "</p>")
+
+                    } else {
+                        $('#count').html("<p>" + data.count + "個結果が見つかりました</p>")
+
+                    }
+                },
+                error: function(data){
+                    $('#count').html("<p>error : " + data + "</p>")
+                },
+            });
+        })
         //初期表示
         getPage("../result?page=1");
         var lastpage = "../result?page=1.html";
 
         //ページを取得してくる
         function getPage(elm){
+            $content.html(data).fadeIn(600);
+            /*
             $.ajax({
                 type: 'GET',
                 url: elm,
                 dataType: 'html',
+
                 success: function(data){
                     //成功時の処理
                     $content.html(data).fadeIn(600);
@@ -66,6 +99,7 @@
                 error:function() {
                        }
             });
+            */
         }
     });
 </script>
