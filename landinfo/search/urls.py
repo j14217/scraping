@@ -8,7 +8,4 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('all/', views.all, name='all'),
     path('searchforms/', views.searchforms, name='searchforms'),
-    #path('result/', views.result, name='result'),
-    #ajaxとの通信用url
-    re_path(r'^ajax/search/$', views.ajax_search, name='ajax_search')
 ]

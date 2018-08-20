@@ -1,13 +1,14 @@
 {% extends "./base.html" %}
+{% load url_replace %}
 {% block body %}
-<form action="" method="POST" id="search_form">
+<form action="" method="GET" id="search_form">
     {% csrf_token %}
 
     <table>
     {{form.as_table}}
     </table>
 
-    <!--<input type="submit" value="検索">-->
+    <input type="submit" value="検索">
 </form>
 <!-- debug用の部分 -->
 <div id='test'></div>
@@ -17,91 +18,58 @@
 <div class="paginate">
     <div class="contents">
         {% if contacts.has_previous %}
-        <a href="?page={{ contacts.previous_page_number }}">前へ</a>
-        <!--<a href="../result?page={{ contacts.previous_page_number }}">前へ</a>-->
+            <a href="?{% url_replace page=contacts.previous_page_number %}">前へ</a>
         {% endif %}
 
         {% for num in contacts.paginator.page_range %} 
             {% ifequal num entry.number %}
                 {{ num }}
             {% else %}
-                <a href="?page={{ num }}">{{ num }}</a>
-                <!--<a href="../result?page={{ num }}">{{ num }}</a>-->
+                <a href="?{% url_replace page=num  %}">{{ num }}</a>
             {% endifequal %}
         {% endfor %}
 
         {% if contacts.has_next %}
-            <a href="?page={{ contacts.next_page_number }}">次へ</a>
-            <!--<a href="../result?page={{ contacts.next_page_number }}">次へ</a>-->
+            <a href="?{% url_replace page=contacts.next_page_number %}">次へ</a>
         {% endif %}
     </div>
 </div>
 <!--  ページング部分(終)　-->
 <!--  resultクラスのタグ内にjqueryで検索結果ページを表示　-->
-<div class="result"></div>
+<div class="result">
+<table class="alltable">
+    <thead>
+        <tr>
+            <th rowspan="3" class="columid">id</th><th colspan="3">タイトル</th><th colspan="3">住所</th>
+        </tr>
+        <tr>
+            <th colspan="6">交通</th>
+        </tr>
+        <tr>
+        <th>価格</th><th>坪単価</th><th>面積</th><th>私道負担</th><th>建蔽率</th><th>容積率</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+            <tr>
+                <td rowspan="3" class="columid">{{ contact.id }}</td><td colspan="3"><a href="/search/{{ contact.id }}/detail">{{contact.title}}</a></td><td colspan="3" title="{{ contact.location }}"><a href="https://www.google.co.jp/maps/place/{{ contact.location }}">{{ contact.location }}</a></td>
+            </tr>
+            <tr>
+                <td colspan="6" title="{{ contact.traffic }}">{{ contact.traffic }}</td>
+            </tr>
+            <tr>
+                <td>{{ contact.price }}万円</td><td>{{ contact.tsubo_unit_price }}万円</td><td>{{contact.land_area}}㎡</td><td>{{ contact.private_road_burden }}</td><td>{{ contact.building_coverage }}</td><td>{{ contact.floor_area_ratio }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
 
 <!--  検索結果をページングと紐付けて出力　-->
 <!--  ※jsファイルで以下の処理を読み込むと
     　　GETリクエストがループする不具合あり　-->
 <script type="text/javascript">
-    $(function(){
-        //ページを表示させる箇所の設定
-        var $content = $('.result');
-        //ページリンクをクリックした時の処理
-        $(document).on('click', '.paginate a', function(event) {
-            event.preventDefault();
-            //.paginateクラス内のaタグのリンク先を保存
-            var link = $(this).attr("href");
-            $content.fadeOut(600, function() {
-                getPage(link);
-                });
-            });
 
-        $("#search_form").bind('input propertychange', function(){
-
-            //$('#test').html("<p>" + $(this.max_price).val() + "</p>")
-            $.ajax({
-                url: '{% url "search:ajax_search" %}',
-                data: $('form').serializeArray(),
-                type: 'POST',
-                dataType: 'json',
-                success: function(data){
-                    if(typeof data.count != 'number'){
-                        $('#count').html("<p>" + data.count + "</p>")
-
-                    } else {
-                        $('#count').html("<p>" + data.count + "個結果が見つかりました</p>")
-
-                    }
-                },
-                error: function(data){
-                    $('#count').html("<p>error : " + data + "</p>")
-                },
-            });
-        })
-        //初期表示
-        getPage("../result?page=1");
-        var lastpage = "../result?page=1.html";
-
-        //ページを取得してくる
-        function getPage(elm){
-            $content.html(data).fadeIn(600);
-            /*
-            $.ajax({
-                type: 'GET',
-                url: elm,
-                dataType: 'html',
-
-                success: function(data){
-                    //成功時の処理
-                    $content.html(data).fadeIn(600);
-                },
-                error:function() {
-                       }
-            });
-            */
-        }
-    });
 </script>
 {% endblock %}
 

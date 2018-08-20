@@ -20,4 +20,7 @@ class SearchForm(forms.Form):
     max_price = forms.IntegerField(required=False, label='価格上限(万円)')
     min_area = forms.IntegerField(required=False, label='面積下限(㎡)')
     max_area = forms.IntegerField(required=False, label='面積上限(㎡)')
-    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'SearchForm'
