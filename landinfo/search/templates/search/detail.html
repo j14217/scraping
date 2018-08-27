@@ -1,19 +1,29 @@
 {% extends "./base.html" %}
 {% block body %}
-<table class="onetable">
-    <thead>
+<div class="container">
+    <h2 align="center">詳細情報</h2>
+    <button class="btn btn-info btn-outline-success btn-sm" onclick="history.back()">戻る</button>
+</div>
+
+<div class="container">
+    <br>
+    <table class="table w-50 table-bordered table-sm" align="left">
+    {% for a in names|slice:":27" %}{% for b in contact|slice:":27" %}
+        {% if forloop.counter == forloop.parentloop.counter %}
         <tr>
-            {% for dt in name %}
-                <th>{{ dt }}</th>
-            {% endfor %}
-        </tr>    
-    </thead>
-    <tbody>
-        <tr>
-            {% for colum in colmuns %}
-                <td>{{ colum }}</td>
-            {% endfor %}
+            <th class="w-25" style="font-size: 10pt" bgcolor="#c8cbd1">{{a}}</th><td style="font-size: 9pt">{{b}}</td>
         </tr>
-    </tbody>   
-</table>
+        {% endif %}
+    {% endfor %}{% endfor %}
+    </table>
+    <table class="table w-50 table-bordered table-sm">
+    {% for a in names|slice:"27:" %}{% for b in contact|slice:"27:" %}
+        {% if forloop.counter == forloop.parentloop.counter %}
+        <tr>
+            <th class="w-25" style="font-size: 10pt" bgcolor="#c8cbd1">{{a}}</th><td style="font-size: 9pt">{{b}}</td>
+        </tr>
+        {% endif %}
+    {% endfor %}{% endfor %}
+    </table>
+</div>
 {% endblock %}

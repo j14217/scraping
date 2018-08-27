@@ -20,9 +20,12 @@ names = landcolumns()
 
 #詳細画面 http://127.0.0.1:8000/search/(レコードのid)/detail
 def detail(request, landinfo_id):
+    
     data = sland.selectone(landinfo_id)
+    #data = LandInfo.objects.get(id=landinfo_id)
     name = names.landname
-    return render(request, 'search/detail.html', {'columns':data,'name':name})
+    length = len(name)/2
+    return render(request, 'search/detail.html', {'names':name, 'contact':data})
 
 #インデックス画面 http://127.0.0.1:8000/search/
 def index(request):
@@ -31,7 +34,10 @@ def index(request):
 #全件表示画面 http://127.0.0.1:8000/search/all
 def all(request):
     data = sland.selectall()
-    return render(request, 'search/all.html', {'columns':data})
+    searchpage = Paginator(data, 100)
+    page = request.GET.get('page')
+    contacts = searchpage.get_page(page)
+    return render(request, 'search/all.html', {'columns':data, 'contacts': contacts})
 
 #検索画面 http://127.0.0.1:8000/search/searchforms/
 def searchforms(request):
@@ -42,6 +48,7 @@ def searchforms(request):
         if form.is_valid():
             #セッション型を使わずに、辞書型そのまま使用します
             form_data = {
+                'room_id': form.cleaned_data.get('room_id'),
                 'title': form.cleaned_data.get('title'),
                 'location': form.cleaned_data.get('location'),
                 'traffic': form.cleaned_data.get('traffic'),

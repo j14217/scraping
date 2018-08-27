@@ -1,48 +1,61 @@
 {% extends "./base.html" %}
+{% load url_replace %}
 {% block body %}
-<table  class="alltable">
-    <tr>
-    <td rowspan="3" class="columid">id</td><td colspan="4">タイトル</td>
-    </tr>
-    <tr>
-    <td  class="title_long">交通</td><td>価格(万円)</td><td>土地面積</td><td >容積量</td>
-    </tr>
-    <tr>
-    <td  class="title_long">所在地</td><td>坪単価</td><td>私道負担</td><td>建蔽率</td>
-    </tr>
-</table>
-{% for colum in columns %}
-<table class="alltable">
-    <tr>
-    <td rowspan="3" class="columid">{{ colum.id }}</td><td colspan="4"><a href="/search/{{ colum.id }}/one">{{colum.title}}</a></td>
-    </tr>
-    <tr>
-    <td title="{{ colum.traffic }}" class="long">{{ colum.traffic }}</td><td>{{ colum.price }}万円</td><td>{{colum.land_area}}㎡</td><td>{{ colum.floor_area_ratio }}</td>
-    </tr>
-    <tr>
-    <td title="{{ colum.location }}" class="long"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td>{{ colum.tsubo_unit_price }}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td>
-    </tr>
-</table>
-{% endfor %}
+<div class="container">
+    <table class="table table-striped table-bordered text-left table-condensed table-sm" id="alltable">
+        <thead id="table-head">
+            <tr>
+                <th rowspan="2" class="columid text-nowrap">物件番号</th><th colspan="2">物件概要</th><th colspan="2">住所</th><th colspan="3">交通</th>
+            </tr>
+            <tr>
+                <th>価格<small>(万円)</small></th><th>坪単価<small>(万円)</small></th><th>面積<small>(㎡)</small></th><th>私道負担</th><th>建蔽率</th><th>容積率</th><th class="text-nowrap">情報公開日</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for colum in columns %}
+                {% if forloop.counter0|divisibleby:"2" %}
+                    <tr id="row-1">
+                        <td rowspan="2" class="columid">{{ colum.id }}</td><td colspan="2"><a href="/search/{{ colum.id }}/detail">{{colum.title}}</a></td><td  colspan="2" title="{{ colum.location }}"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td colspan="3" title="{{ colum.traffic }}">{{ colum.traffic }}</td>
+                    </tr>
+                    <tr id="row-1">
+                            <td>{{ colum.price }}</td><td>{{ colum.tsubo_unit_price }}</td><td>{{colum.land_area}}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td><td>{{ colum.floor_area_ratio }}</td><td>{{ colum.info_release_date }}</td>
+                    </tr>
+                {% else %}
+                    <tr id="row-2">
+                        <td rowspan="2" class="columid">{{ colum.id }}</td><td colspan="2"><a href="/search/{{ colum.id }}/detail">{{colum.title}}</a></td><td  colspan="2" title="{{ colum.location }}"><a href="https://www.google.co.jp/maps/place/{{ colum.location }}">{{ colum.location }}</a></td><td colspan="3" title="{{ colum.traffic }}">{{ colum.traffic }}</td>
+                    </tr>
+                    <tr id="row-2">
+                            <td>{{ colum.price }}</td><td>{{ colum.tsubo_unit_price }}</td><td>{{colum.land_area}}</td><td>{{ colum.private_road_burden }}</td><td>{{ colum.building_coverage }}</td><td>{{ colum.floor_area_ratio }}</td><td>{{ colum.info_release_date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
+<!--  ページング部分(始)　-->
+<div class="container">
+    <ul class="pagination">
+        {% if contacts.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.previous_page_number %}">前へ</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link disabled">前へ</a></li>
+        {% endif %}
 
-{% if contacts.has_previous %}
-<a href="?page={{ contacts.previous_page_number }}">前へ</a>
-{% endif %}
+        {% for num in contacts.paginator.page_range %} 
+            {% ifequal num contacts.number %}
+                <li class="page-item active"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
+            {% endifequal %}
+        {% endfor %}
 
-
-
-{% for num in contacts.paginator.page_range %} 
-{% ifequal num entry.number %}
-{{ num }}
-{% else %}
-<a href="?page={{ num }}">{{ num }}</a>
-{% endifequal %}
-{% endfor %}
-
-
-{% if contacts.has_next %}
-<a href="?page={{ contacts.next_page_number }}">次へ</a>
-{% endif %}
-
+        {% if contacts.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.next_page_number %}">次へ</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link disabled">次へ</a></li>
+        {% endif %}
+    </ul>
+</div>
+<!--  ページング部分(終)　-->
 {% endblock %}

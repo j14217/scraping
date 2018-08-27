@@ -1,0 +1,20 @@
+#row-1 {
+    background-color: #ffffff;
+}
+
+#row-2 {
+    background-color: #cccccc;
+}
+
+#table-head {
+    background-color: aliceblue
+}
+
+#form{
+    font-family: "Yu Gothic";
+    background-color: antiquewhite
+}
+
+container.form.input.id_title {
+    width: 30px;
+}

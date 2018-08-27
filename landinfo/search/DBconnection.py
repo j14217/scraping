@@ -36,6 +36,7 @@ class selectland():
         Column('floor_area_ratio', String),
         Column('floor_space', String),
         Column('geography', String),
+        Column('info_provider', String),
         Column('info_release_date', String),
         Column('info_update_date', String),
         Column('land_area', String),
@@ -64,6 +65,9 @@ class selectland():
         Column('total_blocks', String),
         Column('tsubo_unit_price', String),
         Column('units_sold_total_units', String),
+        Column('company_profile', String),
+        Column('event_info', String),
+        Column('other_restrictions', String),
     )
 
     #カラム内のNoneデータを文字列「-」に変更する機能
@@ -90,6 +94,8 @@ class selectland():
         result = self.conn.execute(s)
         data = result.fetchone()
         return data
+        #data = LandInfo.objects.get(id=landinfo_id)
+        #return data
     #検索フォームの条件を基に絞り込む機能
     #keywords:POSTリクエストで受け取った辞書データ
     def selectsearch(self,keywords):
@@ -98,7 +104,10 @@ class selectland():
         data = LandInfo.objects.all()
 
         #filterに使用できる各メソッドの参考：https://codelab.website/django-queryset-filter/
-        #価格上限(入力フォームが空の場合、処理を飛ばす)
+        #物件番号(入力フォームが空の場合、処理を飛ばす)
+        if keywords['room_id']:
+            data = data.filter(id__istartswith = keywords['room_id'])
+        #価格上限
         if keywords['max_price']:
             data = data.filter(price__lte = keywords['max_price'])
         #価格下限
@@ -134,57 +143,6 @@ class selectland():
             data = data.order_by('-land_area')
         #ソート実行
         data = data.all()
-        '''
-        元コード
-
-        jouken = {}
-        data = self.session.query(self.land_info)
-
-        #価格上限(入力フォームが空の場合、処理を飛ばす)
-        if keywords['max_price'] !='':
-            data = data.filter(self.land_info.c.price <= keywords['max_price'])
-        #価格下限
-        if keywords['min_price'] !='':
-            data = data.filter(self.land_info.c.price >= keywords['min_price'])
-        
-        #面積上限
-        if keywords['max_area'] !='':
-            data = data.filter(self.land_info.c.land_area <= keywords['max_area'])
-        #面積下限
-        if keywords['min_area'] !='':
-            data = data.filter(self.land_info.c.land_area >= keywords['min_area'])
-
-        #タイトル検索
-        if keywords['title'] != '':
-            jouken['title'] = self.land_info.c.title.like('%\\' + keywords['title'] + '%', escape='\\')
-        #所在地検索
-        if keywords['location'] !='':
-            jouken['location']= self.land_info.c.location.like('%\\' + keywords['location'] + '%', escape='\\')
-        #交通検索
-        if keywords['traffic'] !='':
-            jouken['traffic']= self.land_info.c.traffic.like('%\\' + keywords['traffic'] + '%', escape='\\')
-
-        #各検索ワードで絞込み
-        for filter_land in jouken.values():
-            data = data.filter(filter_land)
-
-        #価格の順番
-        if keywords['order'] == '1':
-            data = data.order_by(self.land_info.c.price)
-        elif keywords['order'] == '2':
-            data = data.order_by(self.land_info.c.price.desc())
-        elif keywords['order'] == '3':
-            data = data.order_by(self.land_info.c.tsubo_unit_price.desc())
-        elif keywords['order'] == '4':
-            data = data.order_by(self.land_info.c.tsubo_unit_price)
-        elif keywords['order'] == '5':
-            data = data.order_by(self.land_info.c.land_area.desc())
-        elif keywords['order'] == '6':
-            data = data.order_by(self.land_info.c.land_area)
-        
-        #ソート実行
-        data = data.all()
-        '''
         
         return data
 

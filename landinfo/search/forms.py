@@ -3,6 +3,7 @@ from django import forms
 from . import models
 #検索フォームの各フィールド
 class SearchForm(forms.Form):
+    room_id = forms.IntegerField(required=False, label='物件番号')
     title = forms.CharField(required=False, label='タイトル', max_length=200)
     location = forms.CharField( required=False, label='所在地', max_length=200)
     traffic = forms.CharField( required=False, label='交通', max_length=200)
@@ -20,7 +21,3 @@ class SearchForm(forms.Form):
     max_price = forms.IntegerField(required=False, label='価格上限(万円)')
     min_area = forms.IntegerField(required=False, label='面積下限(㎡)')
     max_area = forms.IntegerField(required=False, label='面積上限(㎡)')
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'SearchForm'
