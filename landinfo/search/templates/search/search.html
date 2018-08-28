@@ -2,98 +2,97 @@
 {% load url_replace %}
 {% block body %}
 
-<div class="container">
-    <h1 class="text-center">土地検索ツール</h1>
-    <form action="" method="GET" id="search_form">
-        {% csrf_token %}
+    <div class="container">
+        <form action="" method="GET" id="search_form">
+            {% csrf_token %}
 
-        <div class="mx-auto" id="form">
-            {{ form }}
-        </div>
-        <br>
-        <div class="row">
-            <!--  ページング部分(始)　-->
-            <div class="col-sm-8 text-center">
-                <ul class="pagination">
-                {% if contacts %}
-                    {% if contacts.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.previous_page_number %}">前へ</a></li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link disabled">前へ</a></li>
-                    {% endif %}
-
-                    {% for num in contacts.paginator.page_range %} 
-                        {% ifequal num contacts.number %}
-                            <li class="page-item active"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
+            <div class="mx-auto" id="form">
+                {{ form }}
+            </div>
+            <br>
+            <div class="row">
+                <!--  ページング部分(始)　-->
+                <div class="col-sm-8 text-center">
+                    <ul class="pagination">
+                    {% if contacts %}
+                        {% if contacts.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.previous_page_number %}">前へ</a></li>
                         {% else %}
-                            <li class="page-item"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
-                        {% endifequal %}
-                    {% endfor %}
+                            <li class="page-item"><a class="page-link disabled">前へ</a></li>
+                        {% endif %}
 
-                    {% if contacts.has_next %}
-                        <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.next_page_number %}">次へ</a></li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link disabled">次へ</a></li>
+                        {% for num in contacts.paginator.page_range %} 
+                            {% ifequal num contacts.number %}
+                                <li class="page-item active"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?{% url_replace page=num  %}">{{ num }}</a></li>
+                            {% endifequal %}
+                        {% endfor %}
+
+                        {% if contacts.has_next %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace page=contacts.next_page_number %}">次へ</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link disabled">次へ</a></li>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                </ul>
+                    </ul>
+                </div>
+                <!--  ページング部分(終)　-->
+                <div class="col-sm-4 mx-auto pull-right">
+                    <input type="submit" class="btn btn-info btn-outline-primary" value="検索">
+                    <botton class="btn btn-info btn-outline-primary" onclick="location.href='http://localhost:8000/search/searchforms/'">クリア</button>
+                </div>
             </div>
-            <!--  ページング部分(終)　-->
-            <div class="col-sm-4 mx-auto pull-right">
-                <input type="submit" class="btn btn-info btn-outline-primary btn-sm" value="検索">
-                <input type="reset" class="btn btn-info btn-outline-primary btn-sm">
-                <botton class="btn btn-info btn-outline-primary btn-sm" href="http://localhost:8000/search/">戻る</button>
-            </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
 
-<!--  resultクラスのタグ内にjqueryで検索結果ページを表示　-->
-
-<div class="container" id="result">
-    <br>
-    <table class="table table-bordered text-left table-condensed table-sm" id="alltable">
-        <thead id="table-head">
-            {% if contacts %}
-            <tr>
-                <th rowspan="2" class="columid text-nowrap">物件番号</th><th colspan="2">物件概要</th><th colspan="2">住所</th><th colspan="3">交通</th>
-            </tr>
-            <tr>
-                <th>価格<small>(万円)</small></th><th>坪単価<small>(万円)</small></th><th>面積<small>(㎡)</small></th><th>私道負担</th><th>建蔽率</th><th>容積率</th><th class="text-nowrap">情報公開日</th>
-            </tr>
-            {% endif %}
-        </thead>
-        <tbody>
-            {% for contact in contacts %}
-                {% if forloop.counter0|divisibleby:"2" %}
-                    <tr id="row-1">
-                        <td rowspan="2" class="columid">{{ contact.id }}</td><td colspan="2"><a href="/search/{{ contact.id }}/detail">{{contact.title}}</a></td><td  colspan="2" title="{{ contact.location }}"><a href="https://www.google.co.jp/maps/place/{{ contact.location }}">{{ contact.location }}</a></td><td colspan="3" title="{{ contact.traffic }}">{{ contact.traffic }}</td>
-                    </tr>
-                    <tr id="row-1">
-                            <td>{{ contact.price }}</td><td>{{ contact.tsubo_unit_price }}</td><td>{{contact.land_area}}</td><td>{{ contact.private_road_burden }}</td><td>{{ contact.building_coverage }}</td><td>{{ contact.floor_area_ratio }}</td><td>{{ contact.info_release_date }}</td>
-                    </tr>
-                {% else %}
-                    <tr id="row-2">
-                        <td rowspan="2" class="columid">{{ contact.id }}</td><td colspan="2"><a href="/search/{{ contact.id }}/detail">{{contact.title}}</a></td><td  colspan="2" title="{{ contact.location }}"><a href="https://www.google.co.jp/maps/place/{{ contact.location }}">{{ contact.location }}</a></td><td colspan="3" title="{{ contact.traffic }}">{{ contact.traffic }}</td>
-                    </tr>
-                    <tr id="row-2">
-                            <td>{{ contact.price }}</td><td>{{ contact.tsubo_unit_price }}</td><td>{{contact.land_area}}</td><td>{{ contact.private_road_burden }}</td><td>{{ contact.building_coverage }}</td><td>{{ contact.floor_area_ratio }}</td><td>{{ contact.info_release_date }}</td>
-                    </tr>
+    <!--  resultクラスのタグ内にjqueryで検索結果ページを表示　-->
+    <div class="container">
+        {{ result }}
+        <table class="result table table-bordered table-sm">
+            <thead>
+                {% if contacts %}
+                <tr>
+                    <th rowspan="2" style="width: 76px;">物件番号</th><th colspan="2" style="width: 309px;">物件概要</th><th colspan="2" style="width: 218px;">住所</th><th colspan="3" style="width: 507px;">最寄り駅</th>
+                </tr>
+                <tr>
+                    <th id="number">価格<small>(万円)</small></th><th id="number">坪単価<small>(万円)</small></th><th id="number">面積<small>(㎡)</small></th><th id="number">私道負担</th><th id="number">建蔽率</th><th id="number">容積率</th><th id="number">情報公開日</th>
+                </tr>
                 {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                    {% if forloop.counter0|divisibleby:"2" %}
+                        <tr id="row-1">
+                            <td rowspan="2">{{ contact.id }}</td><td colspan="2"><a href="/search/{{ contact.id }}/detail">{{contact.title}}</a></td><td  colspan="2" title="{{ contact.location }}"><a href="https://www.google.co.jp/maps/place/{{ contact.location }}">{{ contact.location }}</a></td><td colspan="3" title="{{ contact.traffic }}">{{ contact.traffic }}</td>
+                        </tr>
+                        <tr id="row-1">
+                                <td id="number">{{ contact.price }}</td><td id="number">{{ contact.tsubo_unit_price }}</td><td id="number">{{contact.land_area}}</td><td id="number">{{ contact.private_road_burden }}</td><td id="number">{{ contact.building_coverage }}</td><td id="number">{{ contact.floor_area_ratio }}</td><td id="number">{{ contact.info_release_date }}</td>
+                        </tr>
+                    {% else %}
+                        <tr id="row-2">
+                            <td rowspan="2">{{ contact.id }}</td><td colspan="2"><a href="/search/{{ contact.id }}/detail">{{contact.title}}</a></td><td  colspan="2" title="{{ contact.location }}"><a href="https://www.google.co.jp/maps/place/{{ contact.location }}">{{ contact.location }}</a></td><td colspan="3" title="{{ contact.traffic }}">{{ contact.traffic }}</td>
+                        </tr>
+                        <tr id="row-2">
+                                <td id="number">{{ contact.price }}</td><td id="number">{{ contact.tsubo_unit_price }}</td><td id="number">{{contact.land_area}}</td><td id="number">{{ contact.private_road_burden }}</td><td id="number">{{ contact.building_coverage }}</td><td id="number">{{ contact.floor_area_ratio }}</td><td id="number">{{ contact.info_release_date }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<!--  検索結果をページングと紐付けて出力　-->
-<!--  ※jsファイルで以下の処理を読み込むと
-    　　GETリクエストがループする不具合あり　-->
-<script type="text/javascript">
-//クリアボタン機能未完成
-$(function() {
-
-}
-</script>
+    <!--  検索結果をページングと紐付けて出力　-->
+    <!--  ※jsファイルで以下の処理を読み込むと
+        　　GETリクエストがループする不具合あり　-->
+        <script type="text/javascript">
+    //クリアボタン機能未完成
+        $(function() {
+            $(".clearForm").bind("click", function(){
+                $(this.form).find("textarea, :text, select").val("");
+            });
+        }
+        </script>
 {% endblock %}
 

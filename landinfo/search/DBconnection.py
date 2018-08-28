@@ -106,7 +106,7 @@ class selectland():
         #filterに使用できる各メソッドの参考：https://codelab.website/django-queryset-filter/
         #物件番号(入力フォームが空の場合、処理を飛ばす)
         if keywords['room_id']:
-            data = data.filter(id__istartswith = keywords['room_id'])
+            data = data.filter(id = keywords['room_id'])
         #価格上限
         if keywords['max_price']:
             data = data.filter(price__lte = keywords['max_price'])
@@ -141,6 +141,8 @@ class selectland():
             data = data.order_by('land_area')
         elif keywords['order'] == '6':
             data = data.order_by('-land_area')
+        elif keywords['order'] == '0':
+            data = data.objects.none()
         #ソート実行
         data = data.all()
         

@@ -1,20 +1,92 @@
+/*
+row-1とrow-2は検索結果が一行ごと違う背景色の設定
+検索結果奇数行目に関する設定*/
 #row-1 {
     background-color: #ffffff;
 }
-
+/*検索結果偶数行目に関する設定*/
 #row-2 {
+    background-color: #e2e2e2b9;
+}
+/*検索ページの条件フォームに関する設定*/
+.result thead {
+    background-color: #C8D1ED;
+}
+/*数字は全部右寄せ*/
+#number {
+    text-align: right;
+}
+
+/*検索ページの条件フォームに関する設定*/
+#form{
+    font-family: "Yu Gothic",sans-serif;
+    background-color: #C6ECEC;
+    margin: auto;
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-right: 60px;
+
+}
+
+/*検索条件に数字入力欄の長さ*/
+.form-number {
+    width: 70px;
+}
+
+/*検索結果と全件表示のテーブルのレイアウト*/
+.result {
+    text-align: left;
+    table-layout: fixed;
+    font-size: 14px;
+}
+
+/*テーブルのセルの中の文字がはみ出したら「．．．」になるように設定*/
+.result td{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+html,
+body {
+    padding-top: 30px;
+    height: 100%;
+}
+/*フッターのための設定*/
+#wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -20px;
+    padding: 0 0 20px;
+}
+
+.footer {
+    height: 20px;
+    font-size: 11px;
     background-color: #cccccc;
 }
-
-#table-head {
-    background-color: aliceblue
+/*ヘッダーnavbarの設定、参考url:https://work.smarchal.com/twbscolor/*/
+.navbar {
+    background-color: #3e83f2;
+    color: #ffffff;
 }
 
-#form{
-    font-family: "Yu Gothic";
-    background-color: antiquewhite
+.navbar .navbar-text {
+    color: #ffffff;
 }
 
-container.form.input.id_title {
-    width: 30px;
+.navbar .navbar-nav .nav-link {
+    color: #ffffff;
+    border-radius: .25rem;
+    margin: 0 0.25em;
+}
+
+.navbar .navbar-nav .nav-item.active .nav-link,
+.navbar .navbar-nav .nav-item.active .nav-link:hover,
+.navbar .navbar-nav .nav-item.active .nav-link:focus,
+.navbar .navbar-nav .nav-item.show .nav-link,
+.navbar .navbar-nav .nav-item.show .nav-link:hover,
+.navbar .navbar-nav .nav-item.show .nav-link:focus {
+  color: #fbfbfb;
+  background-color: #659bf2;
 }

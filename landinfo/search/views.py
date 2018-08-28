@@ -45,6 +45,7 @@ def searchforms(request):
     #2018/08/16陳追加--------------------------------------------
     if request.method == 'GET':
         form = SearchForm(request.GET)
+        result = ""
         if form.is_valid():
             #セッション型を使わずに、辞書型そのまま使用します
             form_data = {
@@ -65,9 +66,13 @@ def searchforms(request):
             contacts = searchpage.get_page(page)
 
             #sdata = searchpage.page.object_list
-            return render(request, 'search/search.html', {'form': form, 'contacts': contacts})
+            if contacts:
+                return render(request, 'search/search.html', {'form': form, 'contacts': contacts, 'result': result})
+            else:
+                result = "No result!"
+                return render(request, 'search/search.html', {'form': form, 'contacts': contacts, 'result': result})
         else:
         #入力が無ければ、検索画面初期表示(検索フォームだけ表示)
             form = SearchForm()
-            return render(request, 'search/search.html', {'form': form})
+            return render(request, 'search/search.html', {'form': form, 'result': result})
     #------------------------------------------------------------
