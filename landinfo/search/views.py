@@ -22,9 +22,7 @@ names = landcolumns()
 def detail(request, landinfo_id):
     
     data = sland.selectone(landinfo_id)
-    #data = LandInfo.objects.get(id=landinfo_id)
     name = names.landname
-    length = len(name)/2
     return render(request, 'search/detail.html', {'names':name, 'contact':data})
 
 #インデックス画面 http://127.0.0.1:8000/search/
@@ -34,6 +32,7 @@ def index(request):
 #全件表示画面 http://127.0.0.1:8000/search/all
 def all(request):
     data = sland.selectall()
+    #data = LandInfo.objects.all()
     searchpage = Paginator(data, 100)
     page = request.GET.get('page')
     contacts = searchpage.get_page(page)
@@ -60,12 +59,10 @@ def searchforms(request):
                 'max_area': form.cleaned_data.get('max_area'),
             }
             data = sland.selectsearch(form_data)
-            #searchpage = paginate(data, request)
             searchpage = Paginator(data, 10)
             page = request.GET.get('page')
             contacts = searchpage.get_page(page)
 
-            #sdata = searchpage.page.object_list
             if contacts:
                 return render(request, 'search/search.html', {'form': form, 'contacts': contacts, 'result': result})
             else:

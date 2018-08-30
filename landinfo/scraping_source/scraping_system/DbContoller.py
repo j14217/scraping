@@ -14,7 +14,7 @@ class DbContoller:
     # DBの接続、トランザクション開始
     def __init__(self):
         self.url = 'postgresql+psycopg2://postgres:postgres'\
-            '@192.168.0.159:5432/postgres'
+            '@127.0.0.1:5432/postgres'
         self.db_engine = create_engine(self.url)
         self.connection = self.db_engine.connect()
         self.trans = self.connection.begin()
@@ -229,6 +229,12 @@ class DbContoller:
     def db_commit(self):
         print("-> Commit for db")
         self.trans.commit()
+    
+    # DBの重複データ処理
+    def db_delete(self):
+        sql = "DELETE FROM search_landinfo a USING search_landinfo b WHERE a.id < b.id AND a.title = b.title;"\
+                "DELETE FROM search_landinfo WHERE title='title'"
+        self.connection.execute(sql)
 
     # DBの接続を閉じる
     def db_close(self):

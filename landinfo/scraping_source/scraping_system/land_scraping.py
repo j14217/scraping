@@ -1,12 +1,10 @@
 """
 Webスクレイピングを行う
 """
-
-from time import sleep, time
+from time import time
 
 from CsvIO import CsvInput, CsvOutput
 from SiteScraping import SiteScraping
-from DbContoller import DbContoller
 
 # 最終的に収集する都道府県は引数としてリストで渡す
 
@@ -19,80 +17,114 @@ from DbContoller import DbContoller
 #    "山口県", "香川県", "愛媛県", "徳島県", "高知県", "福岡県", "佐賀県",
 #    "長崎県", "大分県", "熊本県", "宮崎県", "鹿児島県", "沖縄県"
 # ]
+def scraping_start(site, prefs):
+    '''スクレイピング開始するメソッド'''
+    # 設定ファイルを読み込む、サイト名を指定
+    config = {}
+    csv_input = CsvInput()
+    config = csv_input.config_reader(site)
 
-# 設定ファイルを読み込む、サイト名を指定
-config = {}
-csv_input = CsvInput()
-config = csv_input.config_reader("suumo")
+    # スクレイピング処理のオブジェクト生成
+    if config["site"] == "athome":
+        # athomeテスト用
+        # 島根27件(3.7min, headless:3.8min), 鳥取83件(10.4min, headless:10.5min)
+        #prefs = [
+        #    "島根", "鳥取"
+        #]
+        scraping = SiteScraping(config, prefs)
+        csv_output1 = CsvOutput(scraping.csv_path1)
+        csv_output2 = CsvOutput(scraping.csv_path2)
 
-# スクレイピング処理のオブジェクト生成
-if config["site"] == "athome":
-    # athomeテスト用
-    # 島根27件(3.7min, headless:3.8min), 鳥取83件(10.4min, headless:10.5min)
-    prefs = [
-        "島根", "鳥取"
-    ]
-    scraping = SiteScraping(config, prefs)
-    csv_output1 = CsvOutput(scraping.csv_path1)
-    csv_output2 = CsvOutput(scraping.csv_path2)
+    elif config["site"] == "suumo":
+        # suumoテスト用
+        # 沖縄県60件(11.4min, headless:11.5min)
+        #prefs = [
+        #    "沖縄県"
+        #]
+        for i in range(len(prefs)):
+            prefs[i] = prefs[i] + '県'
+        scraping = SiteScraping(config, prefs)
+        csv_output = CsvOutput(scraping.csv_path)
 
-elif config["site"] == "suumo":
-    # suumoテスト用
-    # 沖縄県60件(11.4min, headless:11.5min)
-    prefs = [
-        "沖縄県"
-    ]
-    scraping = SiteScraping(config, prefs)
-    csv_output = CsvOutput(scraping.csv_path)
+    elif config["site"] == "yahoo":
+        # yahooテスト用
+        # 青森4件(0.6min, headless:0.8min), 秋田35件(4.0min, headless:4.1min))
+        #prefs = [
+            #"青森"
+        #]
+        scraping = SiteScraping(config, prefs)
+        csv_output = CsvOutput(scraping.csv_path)
 
-elif config["site"] == "yahoo":
-    # yahooテスト用
-    # 青森4件(0.6min, headless:0.8min), 秋田35件(4.0min, headless:4.1min))
-    prefs = [
-        "青森", "秋田"
-    ]
-    scraping = SiteScraping(config, prefs)
-    csv_output = CsvOutput(scraping.csv_path)
+    # ブラウザ生成(headlessにするかTrue/Falseで指定)
+    scraping.open_browser(False)
+    scraping.move_land_page("go")
 
-# ブラウザ生成(headlessにするかTrue/Falseで指定)
-scraping.open_browser(False)
-scraping.move_land_page("go")
+    for pref in scraping.prefs:
+        start_time = time()
+        scraping.go_pref_page(pref)
+        scraping.go_land_list_page()
+        while True:
+            land_list = scraping.get_land_list()
 
-for pref in scraping.prefs:
-    start_time = time()
-    scraping.go_pref_page(pref)
-    scraping.go_land_list_page()
-    while True:
-        land_list = scraping.get_land_list()
+            for land in land_list:
+                scraping.open_land_tab(land)
+                scraping.scraping_data()
+                scraping.close_land_tab()
 
-        for land in land_list:
-            scraping.open_land_tab(land)
-            scraping.scraping_data()
-            scraping.close_land_tab()
+            # 次のページがあるか判断
+            try:
+                # 次のページがあればそのページに遷移
+                scraping.go_next_page()
+            except:
+                # なければ土地のトップに戻る
+                scraping.move_land_page("back")
+                break
 
-        # 次のページがあるか判断
+        # 進捗を表示
+        print("Progress : " + pref)
+        finish_time = time()
+        progress_time = (finish_time - start_time)/60
+        print("-> Scraping is finish : " + str(progress_time) + "min")
+
+        if scraping.site == "athome":
+            csv_output1.csv_writer(scraping.site, scraping.lands_info1)
+            csv_output2.csv_writer(scraping.site, scraping.lands_info2)
+            scraping.lands_info1 = []
+            scraping.lands_info2 = []
+
+        else:
+            csv_output.csv_writer(scraping.site, scraping.lands_info)
+            scraping.lands_info = []
+
+    scraping.close_browser()
+
+if __name__ == '__main__':
+    line_list = []
+    #Settingファイル修正するだけで操作できる
+    #Settingファイルの一行目はサイト名、eg."suumo","athome","yahoo"など
+    #Settingファイルの二行目はスクレイピングしたい県名、eg."秋田","青森","島根"など
+    try:
+        with open("./csv/setting.txt", encoding='utf-8') as fp:
+            line_list = fp.readlines()
+    except:
+        import traceback
+        traceback.print_exc()
+        input("任意のキーを押してください...")
+    #読み込まれた行は改行符号があるので、変換しないといけません
+    if line_list:
+        pref_list = line_list[1].split(',')
+        pref_list[-1] = pref_list[-1].replace('\n', '')
+
         try:
-            # 次のページがあればそのページに遷移
-            scraping.go_next_page()
+            print("WebSite：" + line_list[0].replace('\n', ''))
+            print("検索する県名：")
+            print('\t',end='')
+            print(pref_list)
+            print("スクレイピング中。。。")
+            scraping_start(line_list[0].replace('\n', ''), pref_list)
         except:
-            # なければ土地のトップに戻る
-            scraping.move_land_page("back")
-            break
-
-    # 進捗を表示
-    print("Progress : " + pref)
-    finish_time = time()
-    progress_time = (finish_time - start_time)/60
-    print("-> Scraping is finish : " + str(progress_time) + "min")
-
-    if scraping.site == "athome":
-        csv_output1.csv_writer(scraping.site, scraping.lands_info1)
-        csv_output2.csv_writer(scraping.site, scraping.lands_info2)
-        scraping.lands_info1 = []
-        scraping.lands_info2 = []
-
-    else:
-        csv_output.csv_writer(scraping.site, scraping.lands_info)
-        scraping.lands_info = []
-
-scraping.close_browser()
+            import traceback
+            traceback.print_exc()
+        finally:
+            print("スクレイピング終了")
+            input("任意のキーを押してください...")

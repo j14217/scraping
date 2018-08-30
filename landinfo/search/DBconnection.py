@@ -12,8 +12,6 @@ class selectland():
     url = 'postgresql://postgres:postgres@127.0.0.1:5432/postgres'
     engine = create_engine(url)
     conn = engine.connect()
-    #Session = sessionmaker(bind = engine)
-    #session = Session()
     metadata = MetaData()
     land_info = Table('search_landinfo', metadata,
         Column('id', Integer, primary_key=True),
